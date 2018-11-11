@@ -37,7 +37,7 @@ def t_error(t):
 lexer = lex.lex()
 
 lines = [line for line in sys.stdin]
-data = '\n'.join(lines)
+data = ''.join(lines)
 
 lexer.input(data)
 tokens = []
