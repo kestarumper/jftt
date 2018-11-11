@@ -1,10 +1,9 @@
 import ply.lex as lex
-import ply.yacc as yacc
 import sys
 
 words = 0
 
-tokens = ('WORD', 'SPACE', 'STARTLINE', 'ENDLINE', 'NEWLINE')
+tokens = ('WORD', 'SPACES', 'STARTLINE', 'ENDLINE', 'NEWLINE')
 
 def t_WORD(t):
     r'\w+'
@@ -12,22 +11,22 @@ def t_WORD(t):
     words += 1
     return t
 
-def t_NEWLINE(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-    return t
-
 def t_STARTLINE(t):
-    r'^[\ \t]+'
-    return t
+    r'^\s+'
 
 def t_ENDLINE(t):
-    r'[\ \t]+$'
+    r'\s+$'
+
+def t_NEWLINE(t):
+    r'\s*\n+\s*'
+    # t.lexer.lineno += t.value.count('\n')
+    t.lexer.lineno += 1
+    t.value = '\n'
     return t
 
-def t_SPACE(t):
-    r'\ +'
-    t.value = t.value[0]
+def t_SPACES(t):
+    r'[\ \t]+'
+    t.value = ' '
     return t
 
 def t_error(t):
@@ -37,17 +36,19 @@ def t_error(t):
 
 lexer = lex.lex()
 
-data = '''          adrian
-   rzeżucha           w majtach    
-klucha             
-'''
+lines = [line for line in sys.stdin]
+data = '\n'.join(lines)
 
 lexer.input(data)
+tokens = []
 
 while True:
     tok = lexer.token()
     if not tok:
         break
-    print(tok)
-print(lexer.lineno)
-print(words)
+    print(tok, file=sys.stderr)
+    tokens.append(tok)
+for tok in tokens:
+    print(tok.value, end='')
+print('\n\nlines:' + str(lexer.lineno))
+print('words:' + str(words))
