@@ -13,7 +13,10 @@ def t_LINECOMMENT(t):
 
 def t_DOCCOMMENT(t):
     r'(\/\*{2}(.|\n)*?\*\/)'
+    global LEAVE_DOC_COMMENT
     print(t, file=sys.stderr)
+    if(LEAVE_DOC_COMMENT):
+        print(t.value, end='')
 
 def t_BLOCKCOMMENT(t):
     r'(\/\*(.|\n)*?\*\/)'
@@ -30,6 +33,7 @@ data = ''.join(lines)
 
 lexer.input(data)
 tokens = []
+LEAVE_DOC_COMMENT = (len(sys.argv) > 1) and (sys.argv[1] == '--savedoc')
 
 while True:
     tok = lexer.token()

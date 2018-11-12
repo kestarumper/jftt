@@ -1,10 +1,10 @@
 #include "test/*asdf*/header.h"
 #include <stdio.h>
 
-
+/** \brief Java style Doc String - Foo function */
 int foo();
 
-int bar(); 
+int bar(); /**< Bar function */
 
 int global_var = 1;
 
