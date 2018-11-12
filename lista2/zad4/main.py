@@ -12,6 +12,10 @@ class NotEnoughOperators(Exception):
     def __init__(self):
         Exception.__init__(self,"za mała liczba operatorów")
 
+class BadSymbol(Exception):
+    def __init__(self, symbol):
+        Exception.__init__(self,"zły symbol \"{}\"".format(symbol))
+
 class InversePolishNotation:
     def __init__(self, lexer):
         self.lexer = lexer
@@ -49,6 +53,15 @@ tokens = (
 )
 
 # Tokens
+def t_NUMBER(t):
+    r'-?\d+'
+    try:
+        t.value = int(t.value)
+    except ValueError:
+        print("liczba %d jest za duża", t.value)
+        t.value = 0
+    return t
+
 def t_PLUS(t):
     r'\+'
     t.action = lambda a,b : a + b
@@ -76,18 +89,10 @@ def t_POWER(t):
 
 def t_MODULO(t):
     r'%'
-    t.action = lambda a,b : a + b
+    t.action = lambda a,b : a % b
     return t
 
 
-def t_NUMBER(t):
-    r'-?\d+'
-    try:
-        t.value = int(t.value)
-    except ValueError:
-        print("liczba %d jest za duża", t.value)
-        t.value = 0
-    return t
 
 
 # Ignored characters
@@ -95,8 +100,8 @@ t_ignore = " \t"
 
 
 def t_error(t):
-    printError("zły symbol '%s'" % t.value[0])
     t.lexer.skip(1)
+    raise BadSymbol(t.value[0])
 
 
 # Build the lexer
@@ -107,12 +112,11 @@ while True:
     toks = []
     try:
         s = input('ipn> ')   # Use raw_input on Python 2
+        result = ipn.parse(s)
+        print("= {}".format(result))
     except KeyboardInterrupt:
         print("\nBye")
         break
-    try:
-        result = ipn.parse(s)
-        print("= {}".format(result))
     except Exception as e:
         printError(str(e))
     
