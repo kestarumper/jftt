@@ -8,7 +8,7 @@ def t_STRING(t):
     print(t.value, end='')
 
 def t_LINECOMMENT(t):
-    r'(\/\/.*\n)'
+    r'(\/(\\\n)?\/)(((.*\\\n)+.*\n)|(.*\n))'
     print(t, file=sys.stderr)
 
 def t_DOCCOMMENT(t):

@@ -1,9 +1,7 @@
-adrian
-rzeżu
-cha w majtach
-klucha ropucha polaku robaku
-harpagan
-klocki
+foo
+zaza
+aba
+bar
 
-lines:6
-words:11
+lines:4
+words:4
