@@ -71,8 +71,7 @@ def t_NUMBER(t):
 
 
 def t_error(t):
-    print("Nieprawidłowy znak '%s'" % t.value[0])
-    t.lexer.skip(1)
+    raise SyntaxError("Nieprawidłowy znak '%s'" % t.value[0])
 
 
 lexer = lex.lex()
@@ -110,7 +109,7 @@ def p_expression_parentheses(t):
 
 def p_expression_uminus(t):
     'expression : MINUS expression %prec UMINUS'
-    t[0] = (-t[2][0], '{}'.format(-t[2][0]))
+    t[0] = (-t[2][0], '{} ~'.format(t[2][1]))
 
 
 def p_expression_number(t):
