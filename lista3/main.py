@@ -109,7 +109,7 @@ def p_expression_parentheses(t):
 
 def p_expression_uminus(t):
     'expression : MINUS expression %prec UMINUS'
-    t[0] = (-t[2][0], '{} ~'.format(t[2][1]))
+    t[0] = (-t[2][0], '{} -1 *'.format(t[2][1]))
 
 
 def p_expression_number(t):
@@ -126,6 +126,12 @@ def p_error(t):
     raise SyntaxError("Błędna składnia")
 
 
+def prCyan(skk): print("\033[96m{}\033[00m".format(skk))
+
+
+def prRed(skk): print("\033[91m{}\033[00m".format(skk))
+
+
 parser = yacc.yacc()
 
 lines = [line for line in sys.stdin]
@@ -133,12 +139,6 @@ lines = ''.join(lines)
 lines = lines.split('\\\n')
 lines = ''.join(lines)
 lines = lines.split('\n')
-
-
-def prCyan(skk): print("\033[96m{}\033[00m".format(skk))
-
-
-def prRed(skk): print("\033[91m{}\033[00m".format(skk))
 
 
 for line in lines:
