@@ -40,8 +40,7 @@ tokens = [
     'COLON',
     'ASSIGN',
     'num',
-    'pidentifier',
-    'COMMENT'
+    'pidentifier'
 ] + list(reserved.values())
 
 reserved_re = '|'.join(reserved.values())
@@ -65,6 +64,7 @@ t_COLON = r':'
 t_ASSIGN = r':='
 t_pidentifier = r'[_a-z]+'
 
+
 def t_COMMENT(t):
     r'(\#(.*?(\\\n)*)+\n)|(\[.*\])'
     pass
@@ -80,16 +80,19 @@ def t_num(t):
     t.value = int(t.value)
     return t
 
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+
 
 def t_CONTROL(t):
     r'[A-Z]+'
     controlToken = reserved.get(t.value)
     if(not controlToken):
-        raise Exception("Bad control sequence '%s'" % t.value)
+        raise SyntaxError("Bad control sequence '%s'" % t.value)
     t.type = controlToken
     return t
+
 
 lexer = lex.lex()

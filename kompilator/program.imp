@@ -1,15 +1,19 @@
+[ sito Eratostenesa ]
 DECLARE
-    a; b;
+    n; j; sito(2:100);
 IN
-    READ a;
-    WHILE a>0 DO
-        b:=a/2;
-        b:=2*b;
-        IF a>b THEN 
-            WRITE 1;
-        ELSE 
-            WRITE 0;
+    n := 100;
+    FOR i FROM n DOWNTO 2 DO
+        sito(i) := 1;
+    ENDFOR
+    FOR i FROM 2 TO n DO
+        IF sito(i) != 0 THEN
+            j := i + i;
+            WHILE j <= n DO
+                sito(j) := 0;
+                j := j + i;
+            ENDWHILE
+            WRITE i;
         ENDIF
-        a:=a/2;
-    ENDWHILE
+    ENDFOR
 END

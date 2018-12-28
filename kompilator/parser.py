@@ -49,7 +49,7 @@ def p_condition(p):
 
 
 def p_value(p):
-    '''value     : num
+    '''value    : num
                 | identifier'''
 
 
@@ -58,5 +58,8 @@ def p_identifier(p):
                     | pidentifier LPAREN pidentifier RPAREN
                     | pidentifier LPAREN num RPAREN'''
 
+
+def p_error(p):
+    raise SyntaxError("Syntax error")
 
 parser = yacc.yacc()

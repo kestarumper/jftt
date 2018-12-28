@@ -1,5 +1,7 @@
-# from tokenizer import lexer
-from parser import parser
+from parser import parser, lexer
+
+def prCyan(skk): print("\033[96m{}\033[00m".format(skk))
+def prRed(skk): print("\033[91m{}\033[00m".format(skk))
 
 def readFile(fname):
     data = []
@@ -15,10 +17,15 @@ def writeToFile(fname, lines):
     
 data = readFile('program.imp')
 
-# lexer.input(data)
-# for tok in lexer:
-#     print(tok)
 
-result = parser.parse(data)
-print(result)
-writeToFile('program.imp.copy', result)
+try:
+    lexer.input(data)
+    for tok in lexer:
+        print(tok)
+    result = parser.parse(data, tracking=True)
+    print(result)
+    writeToFile('program.imp.copy', result)
+    pass
+except SyntaxError as err:
+    prRed(err)
+    pass
