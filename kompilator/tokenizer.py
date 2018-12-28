@@ -37,11 +37,11 @@ tokens = [
     'LPAREN',
     'RPAREN',
     'SEMI',
+    'COLON',
     'ASSIGN',
     'num',
     'pidentifier',
-    'COMMENTLINE',
-    'COMMENTBRACKETS',
+    'COMMENT'
 ] + list(reserved.values())
 
 reserved_re = '|'.join(reserved.values())
@@ -61,10 +61,13 @@ t_GEQ = r'>='
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_SEMI = r';'
+t_COLON = r':'
 t_ASSIGN = r':='
 t_pidentifier = r'[_a-z]+'
-t_COMMENTLINE = r'\#(.*?(\\\n)*)+\n'
-t_COMMENTBRACKETS = r'\[.*\]'
+
+def t_COMMENT(t):
+    r'(\#(.*?(\\\n)*)+\n)|(\[.*\])'
+    pass
 
 
 def t_newline(t):

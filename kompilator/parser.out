@@ -1,1 +1,1497 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMENT
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> DECLARE declarations IN commands END
+Rule 2     declarations -> declarations pidentifier SEMI
+Rule 3     declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI
+Rule 4     declarations -> <empty>
+Rule 5     commands -> commands command
+Rule 6     commands -> command
+Rule 7     command -> identifier ASSIGN expression SEMI
+Rule 8     command -> IF condition THEN commands ELSE commands ENDIF
+Rule 9     command -> IF condition THEN commands ENDIF
+Rule 10    command -> WHILE condition DO commands ENDWHILE
+Rule 11    command -> DO commands WHILE condition ENDDO
+Rule 12    command -> FOR pidentifier FROM value TO value DO commands ENDFOR
+Rule 13    command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+Rule 14    command -> READ identifier SEMI
+Rule 15    command -> WRITE value SEMI
+Rule 16    expression -> value
+Rule 17    expression -> value PLUS value
+Rule 18    expression -> value MINUS value
+Rule 19    expression -> value TIMES value
+Rule 20    expression -> value DIVIDE value
+Rule 21    expression -> value MODULO value
+Rule 22    condition -> value EQ value
+Rule 23    condition -> value NEQ value
+Rule 24    condition -> value LT value
+Rule 25    condition -> value GT value
+Rule 26    condition -> value LEQ value
+Rule 27    condition -> value GEQ value
+Rule 28    value -> num
+Rule 29    value -> identifier
+Rule 30    identifier -> pidentifier
+Rule 31    identifier -> pidentifier LPAREN pidentifier RPAREN
+Rule 32    identifier -> pidentifier LPAREN num RPAREN
+
+Terminals, with rules where they appear
+
+ASSIGN               : 7
+COLON                : 3
+COMMENT              : 
+DECLARE              : 1
+DIVIDE               : 20
+DO                   : 10 11 12 13
+DOWNTO               : 13
+ELSE                 : 8
+END                  : 1
+ENDDO                : 11
+ENDFOR               : 12 13
+ENDIF                : 8 9
+ENDWHILE             : 10
+EQ                   : 22
+FOR                  : 12 13
+FROM                 : 12 13
+GEQ                  : 27
+GT                   : 25
+IF                   : 8 9
+IN                   : 1
+LEQ                  : 26
+LPAREN               : 3 31 32
+LT                   : 24
+MINUS                : 18
+MODULO               : 21
+NEQ                  : 23
+PLUS                 : 17
+READ                 : 14
+RPAREN               : 3 31 32
+SEMI                 : 2 3 7 14 15
+THEN                 : 8 9
+TIMES                : 19
+TO                   : 12
+WHILE                : 10 11
+WRITE                : 15
+error                : 
+num                  : 3 3 28 32
+pidentifier          : 2 3 12 13 30 31 31 32
+
+Nonterminals, with rules where they appear
+
+command              : 5 6
+commands             : 1 5 8 8 9 10 11 12 13
+condition            : 8 9 10 11
+declarations         : 1 2 3
+expression           : 7
+identifier           : 7 14 29
+program              : 0
+value                : 12 12 13 13 15 16 17 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . DECLARE declarations IN commands END
+
+    DECLARE         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> DECLARE . declarations IN commands END
+    (2) declarations -> . declarations pidentifier SEMI
+    (3) declarations -> . declarations pidentifier LPAREN num COLON num RPAREN SEMI
+    (4) declarations -> .
+
+    IN              reduce using rule 4 (declarations -> .)
+    pidentifier     reduce using rule 4 (declarations -> .)
+
+    declarations                   shift and go to state 3
+
+state 3
+
+    (1) program -> DECLARE declarations . IN commands END
+    (2) declarations -> declarations . pidentifier SEMI
+    (3) declarations -> declarations . pidentifier LPAREN num COLON num RPAREN SEMI
+
+    IN              shift and go to state 4
+    pidentifier     shift and go to state 5
+
+
+state 4
+
+    (1) program -> DECLARE declarations IN . commands END
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 6
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 5
+
+    (2) declarations -> declarations pidentifier . SEMI
+    (3) declarations -> declarations pidentifier . LPAREN num COLON num RPAREN SEMI
+
+    SEMI            shift and go to state 16
+    LPAREN          shift and go to state 17
+
+
+state 6
+
+    (1) program -> DECLARE declarations IN commands . END
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    END             shift and go to state 18
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 7
+
+    (6) commands -> command .
+
+    END             reduce using rule 6 (commands -> command .)
+    IF              reduce using rule 6 (commands -> command .)
+    WHILE           reduce using rule 6 (commands -> command .)
+    DO              reduce using rule 6 (commands -> command .)
+    FOR             reduce using rule 6 (commands -> command .)
+    READ            reduce using rule 6 (commands -> command .)
+    WRITE           reduce using rule 6 (commands -> command .)
+    pidentifier     reduce using rule 6 (commands -> command .)
+    ELSE            reduce using rule 6 (commands -> command .)
+    ENDIF           reduce using rule 6 (commands -> command .)
+    ENDWHILE        reduce using rule 6 (commands -> command .)
+    ENDFOR          reduce using rule 6 (commands -> command .)
+
+
+state 8
+
+    (7) command -> identifier . ASSIGN expression SEMI
+
+    ASSIGN          shift and go to state 20
+
+
+state 9
+
+    (8) command -> IF . condition THEN commands ELSE commands ENDIF
+    (9) command -> IF . condition THEN commands ENDIF
+    (22) condition -> . value EQ value
+    (23) condition -> . value NEQ value
+    (24) condition -> . value LT value
+    (25) condition -> . value GT value
+    (26) condition -> . value LEQ value
+    (27) condition -> . value GEQ value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    condition                      shift and go to state 21
+    value                          shift and go to state 22
+    identifier                     shift and go to state 24
+
+state 10
+
+    (10) command -> WHILE . condition DO commands ENDWHILE
+    (22) condition -> . value EQ value
+    (23) condition -> . value NEQ value
+    (24) condition -> . value LT value
+    (25) condition -> . value GT value
+    (26) condition -> . value LEQ value
+    (27) condition -> . value GEQ value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    condition                      shift and go to state 25
+    value                          shift and go to state 22
+    identifier                     shift and go to state 24
+
+state 11
+
+    (11) command -> DO . commands WHILE condition ENDDO
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 26
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 12
+
+    (12) command -> FOR . pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> FOR . pidentifier FROM value DOWNTO value DO commands ENDFOR
+
+    pidentifier     shift and go to state 27
+
+
+state 13
+
+    (30) identifier -> pidentifier .
+    (31) identifier -> pidentifier . LPAREN pidentifier RPAREN
+    (32) identifier -> pidentifier . LPAREN num RPAREN
+
+    ASSIGN          reduce using rule 30 (identifier -> pidentifier .)
+    EQ              reduce using rule 30 (identifier -> pidentifier .)
+    NEQ             reduce using rule 30 (identifier -> pidentifier .)
+    LT              reduce using rule 30 (identifier -> pidentifier .)
+    GT              reduce using rule 30 (identifier -> pidentifier .)
+    LEQ             reduce using rule 30 (identifier -> pidentifier .)
+    GEQ             reduce using rule 30 (identifier -> pidentifier .)
+    SEMI            reduce using rule 30 (identifier -> pidentifier .)
+    PLUS            reduce using rule 30 (identifier -> pidentifier .)
+    MINUS           reduce using rule 30 (identifier -> pidentifier .)
+    TIMES           reduce using rule 30 (identifier -> pidentifier .)
+    DIVIDE          reduce using rule 30 (identifier -> pidentifier .)
+    MODULO          reduce using rule 30 (identifier -> pidentifier .)
+    THEN            reduce using rule 30 (identifier -> pidentifier .)
+    DO              reduce using rule 30 (identifier -> pidentifier .)
+    ENDDO           reduce using rule 30 (identifier -> pidentifier .)
+    TO              reduce using rule 30 (identifier -> pidentifier .)
+    DOWNTO          reduce using rule 30 (identifier -> pidentifier .)
+    LPAREN          shift and go to state 28
+
+
+state 14
+
+    (14) command -> READ . identifier SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    pidentifier     shift and go to state 13
+
+    identifier                     shift and go to state 29
+
+state 15
+
+    (15) command -> WRITE . value SEMI
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 30
+    identifier                     shift and go to state 24
+
+state 16
+
+    (2) declarations -> declarations pidentifier SEMI .
+
+    IN              reduce using rule 2 (declarations -> declarations pidentifier SEMI .)
+    pidentifier     reduce using rule 2 (declarations -> declarations pidentifier SEMI .)
+
+
+state 17
+
+    (3) declarations -> declarations pidentifier LPAREN . num COLON num RPAREN SEMI
+
+    num             shift and go to state 31
+
+
+state 18
+
+    (1) program -> DECLARE declarations IN commands END .
+
+    $end            reduce using rule 1 (program -> DECLARE declarations IN commands END .)
+
+
+state 19
+
+    (5) commands -> commands command .
+
+    END             reduce using rule 5 (commands -> commands command .)
+    IF              reduce using rule 5 (commands -> commands command .)
+    WHILE           reduce using rule 5 (commands -> commands command .)
+    DO              reduce using rule 5 (commands -> commands command .)
+    FOR             reduce using rule 5 (commands -> commands command .)
+    READ            reduce using rule 5 (commands -> commands command .)
+    WRITE           reduce using rule 5 (commands -> commands command .)
+    pidentifier     reduce using rule 5 (commands -> commands command .)
+    ELSE            reduce using rule 5 (commands -> commands command .)
+    ENDIF           reduce using rule 5 (commands -> commands command .)
+    ENDWHILE        reduce using rule 5 (commands -> commands command .)
+    ENDFOR          reduce using rule 5 (commands -> commands command .)
+
+
+state 20
+
+    (7) command -> identifier ASSIGN . expression SEMI
+    (16) expression -> . value
+    (17) expression -> . value PLUS value
+    (18) expression -> . value MINUS value
+    (19) expression -> . value TIMES value
+    (20) expression -> . value DIVIDE value
+    (21) expression -> . value MODULO value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    identifier                     shift and go to state 24
+    expression                     shift and go to state 32
+    value                          shift and go to state 33
+
+state 21
+
+    (8) command -> IF condition . THEN commands ELSE commands ENDIF
+    (9) command -> IF condition . THEN commands ENDIF
+
+    THEN            shift and go to state 34
+
+
+state 22
+
+    (22) condition -> value . EQ value
+    (23) condition -> value . NEQ value
+    (24) condition -> value . LT value
+    (25) condition -> value . GT value
+    (26) condition -> value . LEQ value
+    (27) condition -> value . GEQ value
+
+    EQ              shift and go to state 35
+    NEQ             shift and go to state 36
+    LT              shift and go to state 37
+    GT              shift and go to state 38
+    LEQ             shift and go to state 39
+    GEQ             shift and go to state 40
+
+
+state 23
+
+    (28) value -> num .
+
+    EQ              reduce using rule 28 (value -> num .)
+    NEQ             reduce using rule 28 (value -> num .)
+    LT              reduce using rule 28 (value -> num .)
+    GT              reduce using rule 28 (value -> num .)
+    LEQ             reduce using rule 28 (value -> num .)
+    GEQ             reduce using rule 28 (value -> num .)
+    SEMI            reduce using rule 28 (value -> num .)
+    PLUS            reduce using rule 28 (value -> num .)
+    MINUS           reduce using rule 28 (value -> num .)
+    TIMES           reduce using rule 28 (value -> num .)
+    DIVIDE          reduce using rule 28 (value -> num .)
+    MODULO          reduce using rule 28 (value -> num .)
+    THEN            reduce using rule 28 (value -> num .)
+    DO              reduce using rule 28 (value -> num .)
+    ENDDO           reduce using rule 28 (value -> num .)
+    TO              reduce using rule 28 (value -> num .)
+    DOWNTO          reduce using rule 28 (value -> num .)
+
+
+state 24
+
+    (29) value -> identifier .
+
+    EQ              reduce using rule 29 (value -> identifier .)
+    NEQ             reduce using rule 29 (value -> identifier .)
+    LT              reduce using rule 29 (value -> identifier .)
+    GT              reduce using rule 29 (value -> identifier .)
+    LEQ             reduce using rule 29 (value -> identifier .)
+    GEQ             reduce using rule 29 (value -> identifier .)
+    SEMI            reduce using rule 29 (value -> identifier .)
+    PLUS            reduce using rule 29 (value -> identifier .)
+    MINUS           reduce using rule 29 (value -> identifier .)
+    TIMES           reduce using rule 29 (value -> identifier .)
+    DIVIDE          reduce using rule 29 (value -> identifier .)
+    MODULO          reduce using rule 29 (value -> identifier .)
+    THEN            reduce using rule 29 (value -> identifier .)
+    DO              reduce using rule 29 (value -> identifier .)
+    ENDDO           reduce using rule 29 (value -> identifier .)
+    TO              reduce using rule 29 (value -> identifier .)
+    DOWNTO          reduce using rule 29 (value -> identifier .)
+
+
+state 25
+
+    (10) command -> WHILE condition . DO commands ENDWHILE
+
+    DO              shift and go to state 41
+
+
+state 26
+
+    (11) command -> DO commands . WHILE condition ENDDO
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    WHILE           shift and go to state 42
+    IF              shift and go to state 9
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 27
+
+    (12) command -> FOR pidentifier . FROM value TO value DO commands ENDFOR
+    (13) command -> FOR pidentifier . FROM value DOWNTO value DO commands ENDFOR
+
+    FROM            shift and go to state 43
+
+
+state 28
+
+    (31) identifier -> pidentifier LPAREN . pidentifier RPAREN
+    (32) identifier -> pidentifier LPAREN . num RPAREN
+
+    pidentifier     shift and go to state 44
+    num             shift and go to state 45
+
+
+state 29
+
+    (14) command -> READ identifier . SEMI
+
+    SEMI            shift and go to state 46
+
+
+state 30
+
+    (15) command -> WRITE value . SEMI
+
+    SEMI            shift and go to state 47
+
+
+state 31
+
+    (3) declarations -> declarations pidentifier LPAREN num . COLON num RPAREN SEMI
+
+    COLON           shift and go to state 48
+
+
+state 32
+
+    (7) command -> identifier ASSIGN expression . SEMI
+
+    SEMI            shift and go to state 49
+
+
+state 33
+
+    (16) expression -> value .
+    (17) expression -> value . PLUS value
+    (18) expression -> value . MINUS value
+    (19) expression -> value . TIMES value
+    (20) expression -> value . DIVIDE value
+    (21) expression -> value . MODULO value
+
+    SEMI            reduce using rule 16 (expression -> value .)
+    PLUS            shift and go to state 50
+    MINUS           shift and go to state 51
+    TIMES           shift and go to state 52
+    DIVIDE          shift and go to state 53
+    MODULO          shift and go to state 54
+
+
+state 34
+
+    (8) command -> IF condition THEN . commands ELSE commands ENDIF
+    (9) command -> IF condition THEN . commands ENDIF
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 55
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 35
+
+    (22) condition -> value EQ . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 56
+    identifier                     shift and go to state 24
+
+state 36
+
+    (23) condition -> value NEQ . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 57
+    identifier                     shift and go to state 24
+
+state 37
+
+    (24) condition -> value LT . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 58
+    identifier                     shift and go to state 24
+
+state 38
+
+    (25) condition -> value GT . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 59
+    identifier                     shift and go to state 24
+
+state 39
+
+    (26) condition -> value LEQ . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 60
+    identifier                     shift and go to state 24
+
+state 40
+
+    (27) condition -> value GEQ . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 61
+    identifier                     shift and go to state 24
+
+state 41
+
+    (10) command -> WHILE condition DO . commands ENDWHILE
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 62
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 42
+
+    (11) command -> DO commands WHILE . condition ENDDO
+    (10) command -> WHILE . condition DO commands ENDWHILE
+    (22) condition -> . value EQ value
+    (23) condition -> . value NEQ value
+    (24) condition -> . value LT value
+    (25) condition -> . value GT value
+    (26) condition -> . value LEQ value
+    (27) condition -> . value GEQ value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    condition                      shift and go to state 63
+    value                          shift and go to state 22
+    identifier                     shift and go to state 24
+
+state 43
+
+    (12) command -> FOR pidentifier FROM . value TO value DO commands ENDFOR
+    (13) command -> FOR pidentifier FROM . value DOWNTO value DO commands ENDFOR
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 64
+    identifier                     shift and go to state 24
+
+state 44
+
+    (31) identifier -> pidentifier LPAREN pidentifier . RPAREN
+
+    RPAREN          shift and go to state 65
+
+
+state 45
+
+    (32) identifier -> pidentifier LPAREN num . RPAREN
+
+    RPAREN          shift and go to state 66
+
+
+state 46
+
+    (14) command -> READ identifier SEMI .
+
+    END             reduce using rule 14 (command -> READ identifier SEMI .)
+    IF              reduce using rule 14 (command -> READ identifier SEMI .)
+    WHILE           reduce using rule 14 (command -> READ identifier SEMI .)
+    DO              reduce using rule 14 (command -> READ identifier SEMI .)
+    FOR             reduce using rule 14 (command -> READ identifier SEMI .)
+    READ            reduce using rule 14 (command -> READ identifier SEMI .)
+    WRITE           reduce using rule 14 (command -> READ identifier SEMI .)
+    pidentifier     reduce using rule 14 (command -> READ identifier SEMI .)
+    ELSE            reduce using rule 14 (command -> READ identifier SEMI .)
+    ENDIF           reduce using rule 14 (command -> READ identifier SEMI .)
+    ENDWHILE        reduce using rule 14 (command -> READ identifier SEMI .)
+    ENDFOR          reduce using rule 14 (command -> READ identifier SEMI .)
+
+
+state 47
+
+    (15) command -> WRITE value SEMI .
+
+    END             reduce using rule 15 (command -> WRITE value SEMI .)
+    IF              reduce using rule 15 (command -> WRITE value SEMI .)
+    WHILE           reduce using rule 15 (command -> WRITE value SEMI .)
+    DO              reduce using rule 15 (command -> WRITE value SEMI .)
+    FOR             reduce using rule 15 (command -> WRITE value SEMI .)
+    READ            reduce using rule 15 (command -> WRITE value SEMI .)
+    WRITE           reduce using rule 15 (command -> WRITE value SEMI .)
+    pidentifier     reduce using rule 15 (command -> WRITE value SEMI .)
+    ELSE            reduce using rule 15 (command -> WRITE value SEMI .)
+    ENDIF           reduce using rule 15 (command -> WRITE value SEMI .)
+    ENDWHILE        reduce using rule 15 (command -> WRITE value SEMI .)
+    ENDFOR          reduce using rule 15 (command -> WRITE value SEMI .)
+
+
+state 48
+
+    (3) declarations -> declarations pidentifier LPAREN num COLON . num RPAREN SEMI
+
+    num             shift and go to state 67
+
+
+state 49
+
+    (7) command -> identifier ASSIGN expression SEMI .
+
+    END             reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    IF              reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    WHILE           reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    DO              reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    FOR             reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    READ            reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    WRITE           reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    pidentifier     reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    ELSE            reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    ENDIF           reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    ENDWHILE        reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+    ENDFOR          reduce using rule 7 (command -> identifier ASSIGN expression SEMI .)
+
+
+state 50
+
+    (17) expression -> value PLUS . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 68
+    identifier                     shift and go to state 24
+
+state 51
+
+    (18) expression -> value MINUS . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 69
+    identifier                     shift and go to state 24
+
+state 52
+
+    (19) expression -> value TIMES . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 70
+    identifier                     shift and go to state 24
+
+state 53
+
+    (20) expression -> value DIVIDE . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 71
+    identifier                     shift and go to state 24
+
+state 54
+
+    (21) expression -> value MODULO . value
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 72
+    identifier                     shift and go to state 24
+
+state 55
+
+    (8) command -> IF condition THEN commands . ELSE commands ENDIF
+    (9) command -> IF condition THEN commands . ENDIF
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    ELSE            shift and go to state 73
+    ENDIF           shift and go to state 74
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 56
+
+    (22) condition -> value EQ value .
+
+    THEN            reduce using rule 22 (condition -> value EQ value .)
+    DO              reduce using rule 22 (condition -> value EQ value .)
+    ENDDO           reduce using rule 22 (condition -> value EQ value .)
+
+
+state 57
+
+    (23) condition -> value NEQ value .
+
+    THEN            reduce using rule 23 (condition -> value NEQ value .)
+    DO              reduce using rule 23 (condition -> value NEQ value .)
+    ENDDO           reduce using rule 23 (condition -> value NEQ value .)
+
+
+state 58
+
+    (24) condition -> value LT value .
+
+    THEN            reduce using rule 24 (condition -> value LT value .)
+    DO              reduce using rule 24 (condition -> value LT value .)
+    ENDDO           reduce using rule 24 (condition -> value LT value .)
+
+
+state 59
+
+    (25) condition -> value GT value .
+
+    THEN            reduce using rule 25 (condition -> value GT value .)
+    DO              reduce using rule 25 (condition -> value GT value .)
+    ENDDO           reduce using rule 25 (condition -> value GT value .)
+
+
+state 60
+
+    (26) condition -> value LEQ value .
+
+    THEN            reduce using rule 26 (condition -> value LEQ value .)
+    DO              reduce using rule 26 (condition -> value LEQ value .)
+    ENDDO           reduce using rule 26 (condition -> value LEQ value .)
+
+
+state 61
+
+    (27) condition -> value GEQ value .
+
+    THEN            reduce using rule 27 (condition -> value GEQ value .)
+    DO              reduce using rule 27 (condition -> value GEQ value .)
+    ENDDO           reduce using rule 27 (condition -> value GEQ value .)
+
+
+state 62
+
+    (10) command -> WHILE condition DO commands . ENDWHILE
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    ENDWHILE        shift and go to state 75
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 63
+
+    (11) command -> DO commands WHILE condition . ENDDO
+    (10) command -> WHILE condition . DO commands ENDWHILE
+
+    ENDDO           shift and go to state 76
+    DO              shift and go to state 41
+
+
+state 64
+
+    (12) command -> FOR pidentifier FROM value . TO value DO commands ENDFOR
+    (13) command -> FOR pidentifier FROM value . DOWNTO value DO commands ENDFOR
+
+    TO              shift and go to state 77
+    DOWNTO          shift and go to state 78
+
+
+state 65
+
+    (31) identifier -> pidentifier LPAREN pidentifier RPAREN .
+
+    ASSIGN          reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    EQ              reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    NEQ             reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    LT              reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    GT              reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    LEQ             reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    GEQ             reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    SEMI            reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    PLUS            reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    MINUS           reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    TIMES           reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    DIVIDE          reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    MODULO          reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    THEN            reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    DO              reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    ENDDO           reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    TO              reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+    DOWNTO          reduce using rule 31 (identifier -> pidentifier LPAREN pidentifier RPAREN .)
+
+
+state 66
+
+    (32) identifier -> pidentifier LPAREN num RPAREN .
+
+    ASSIGN          reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    EQ              reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    NEQ             reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    LT              reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    GT              reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    LEQ             reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    GEQ             reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    SEMI            reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    PLUS            reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    MINUS           reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    TIMES           reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    DIVIDE          reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    MODULO          reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    THEN            reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    DO              reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    ENDDO           reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    TO              reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+    DOWNTO          reduce using rule 32 (identifier -> pidentifier LPAREN num RPAREN .)
+
+
+state 67
+
+    (3) declarations -> declarations pidentifier LPAREN num COLON num . RPAREN SEMI
+
+    RPAREN          shift and go to state 79
+
+
+state 68
+
+    (17) expression -> value PLUS value .
+
+    SEMI            reduce using rule 17 (expression -> value PLUS value .)
+
+
+state 69
+
+    (18) expression -> value MINUS value .
+
+    SEMI            reduce using rule 18 (expression -> value MINUS value .)
+
+
+state 70
+
+    (19) expression -> value TIMES value .
+
+    SEMI            reduce using rule 19 (expression -> value TIMES value .)
+
+
+state 71
+
+    (20) expression -> value DIVIDE value .
+
+    SEMI            reduce using rule 20 (expression -> value DIVIDE value .)
+
+
+state 72
+
+    (21) expression -> value MODULO value .
+
+    SEMI            reduce using rule 21 (expression -> value MODULO value .)
+
+
+state 73
+
+    (8) command -> IF condition THEN commands ELSE . commands ENDIF
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 80
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 74
+
+    (9) command -> IF condition THEN commands ENDIF .
+
+    END             reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    IF              reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    WHILE           reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    DO              reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    FOR             reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    READ            reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    WRITE           reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    pidentifier     reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    ELSE            reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    ENDIF           reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    ENDWHILE        reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+    ENDFOR          reduce using rule 9 (command -> IF condition THEN commands ENDIF .)
+
+
+state 75
+
+    (10) command -> WHILE condition DO commands ENDWHILE .
+
+    END             reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    IF              reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    WHILE           reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    DO              reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    FOR             reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    READ            reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    WRITE           reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    pidentifier     reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    ELSE            reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    ENDIF           reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    ENDWHILE        reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+    ENDFOR          reduce using rule 10 (command -> WHILE condition DO commands ENDWHILE .)
+
+
+state 76
+
+    (11) command -> DO commands WHILE condition ENDDO .
+
+    END             reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    IF              reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    WHILE           reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    DO              reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    FOR             reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    READ            reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    WRITE           reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    pidentifier     reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    ELSE            reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    ENDIF           reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    ENDWHILE        reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+    ENDFOR          reduce using rule 11 (command -> DO commands WHILE condition ENDDO .)
+
+
+state 77
+
+    (12) command -> FOR pidentifier FROM value TO . value DO commands ENDFOR
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 81
+    identifier                     shift and go to state 24
+
+state 78
+
+    (13) command -> FOR pidentifier FROM value DOWNTO . value DO commands ENDFOR
+    (28) value -> . num
+    (29) value -> . identifier
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    num             shift and go to state 23
+    pidentifier     shift and go to state 13
+
+    value                          shift and go to state 82
+    identifier                     shift and go to state 24
+
+state 79
+
+    (3) declarations -> declarations pidentifier LPAREN num COLON num RPAREN . SEMI
+
+    SEMI            shift and go to state 83
+
+
+state 80
+
+    (8) command -> IF condition THEN commands ELSE commands . ENDIF
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    ENDIF           shift and go to state 84
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 81
+
+    (12) command -> FOR pidentifier FROM value TO value . DO commands ENDFOR
+
+    DO              shift and go to state 85
+
+
+state 82
+
+    (13) command -> FOR pidentifier FROM value DOWNTO value . DO commands ENDFOR
+
+    DO              shift and go to state 86
+
+
+state 83
+
+    (3) declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI .
+
+    IN              reduce using rule 3 (declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI .)
+    pidentifier     reduce using rule 3 (declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI .)
+
+
+state 84
+
+    (8) command -> IF condition THEN commands ELSE commands ENDIF .
+
+    END             reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    IF              reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    WHILE           reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    DO              reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    FOR             reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    READ            reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    WRITE           reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    pidentifier     reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    ELSE            reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    ENDIF           reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    ENDWHILE        reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+    ENDFOR          reduce using rule 8 (command -> IF condition THEN commands ELSE commands ENDIF .)
+
+
+state 85
+
+    (12) command -> FOR pidentifier FROM value TO value DO . commands ENDFOR
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 87
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 86
+
+    (13) command -> FOR pidentifier FROM value DOWNTO value DO . commands ENDFOR
+    (5) commands -> . commands command
+    (6) commands -> . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    commands                       shift and go to state 88
+    command                        shift and go to state 7
+    identifier                     shift and go to state 8
+
+state 87
+
+    (12) command -> FOR pidentifier FROM value TO value DO commands . ENDFOR
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    ENDFOR          shift and go to state 89
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 88
+
+    (13) command -> FOR pidentifier FROM value DOWNTO value DO commands . ENDFOR
+    (5) commands -> commands . command
+    (7) command -> . identifier ASSIGN expression SEMI
+    (8) command -> . IF condition THEN commands ELSE commands ENDIF
+    (9) command -> . IF condition THEN commands ENDIF
+    (10) command -> . WHILE condition DO commands ENDWHILE
+    (11) command -> . DO commands WHILE condition ENDDO
+    (12) command -> . FOR pidentifier FROM value TO value DO commands ENDFOR
+    (13) command -> . FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+    (14) command -> . READ identifier SEMI
+    (15) command -> . WRITE value SEMI
+    (30) identifier -> . pidentifier
+    (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
+    (32) identifier -> . pidentifier LPAREN num RPAREN
+
+    ENDFOR          shift and go to state 90
+    IF              shift and go to state 9
+    WHILE           shift and go to state 10
+    DO              shift and go to state 11
+    FOR             shift and go to state 12
+    READ            shift and go to state 14
+    WRITE           shift and go to state 15
+    pidentifier     shift and go to state 13
+
+    command                        shift and go to state 19
+    identifier                     shift and go to state 8
+
+state 89
+
+    (12) command -> FOR pidentifier FROM value TO value DO commands ENDFOR .
+
+    END             reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    IF              reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    WHILE           reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    DO              reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    FOR             reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    READ            reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    WRITE           reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    pidentifier     reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    ELSE            reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    ENDIF           reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    ENDWHILE        reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+    ENDFOR          reduce using rule 12 (command -> FOR pidentifier FROM value TO value DO commands ENDFOR .)
+
+
+state 90
+
+    (13) command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .
+
+    END             reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    IF              reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    WHILE           reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    DO              reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    FOR             reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    READ            reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    WRITE           reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    pidentifier     reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    ELSE            reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    ENDIF           reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    ENDWHILE        reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+    ENDFOR          reduce using rule 13 (command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR .)
+

@@ -1,5 +1,5 @@
-from tokenizer import lexer
-# from parser import parser
+# from tokenizer import lexer
+from parser import parser
 
 def readFile(fname):
     data = []
@@ -15,10 +15,10 @@ def writeToFile(fname, lines):
     
 data = readFile('program.imp')
 
-lexer.input(data)
-for tok in lexer:
-    print(tok)
+# lexer.input(data)
+# for tok in lexer:
+#     print(tok)
 
-# result = parser.parse(data)
-# print(result)
-# writeToFile('program.imp.copy', result)
+result = parser.parse(data)
+print(result)
+writeToFile('program.imp.copy', result)
