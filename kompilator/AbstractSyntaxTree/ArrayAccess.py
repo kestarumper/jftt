@@ -1,8 +1,6 @@
-from AbstractSyntaxTree.Identifier import Identifier
-
-class ArrayAccess(Identifier):
+class ArrayAccess:
     def __init__(self, name, index):
-        super(ArrayAccess, self).__init__(name, None)
+        self.name = name
         self.index = index
 
 class ArrayAccessByNum(ArrayAccess):

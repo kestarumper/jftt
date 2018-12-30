@@ -4,12 +4,10 @@ from ply.lex import TOKEN
 reserved = {
     'DECLARE': 'DECLARE',
     'IN': 'IN',
-    'END': 'END',
     'IF': 'IF',
     'THEN': 'THEN',
     'ELSE': 'ELSE',
     'ENDIF': 'ENDIF',
-    'DO': 'DO',
     'WHILE': 'WHILE',
     'ENDWHILE': 'ENDWHILE',
     'ENDDO': 'ENDDO',
@@ -19,7 +17,9 @@ reserved = {
     'DOWNTO': 'DOWNTO',
     'ENDFOR': 'ENDFOR',
     'READ': 'READ',
-    'WRITE': 'WRITE'
+    'WRITE': 'WRITE',
+    'DO': 'DO',
+    'END': 'END',
 }
 
 tokens = [
@@ -66,7 +66,7 @@ t_pidentifier = r'[_a-z]+'
 
 
 def t_COMMENT(t):
-    r'(\#(.*?(\\\n)*)+\n)|(\[.*\])'
+    r'(\#(.*?(\\\n)*)+\n)|(\[(.|\n)*\])'
     pass
 
 
@@ -86,8 +86,9 @@ def t_error(t):
     t.lexer.skip(1)
 
 
+reserved_re = '|'.join(reserved.values())
+@TOKEN(reserved_re)
 def t_CONTROL(t):
-    r'[A-Z]+'
     controlToken = reserved.get(t.value)
     if(not controlToken):
         raise SyntaxError("Bad control sequence '%s'" % t.value)

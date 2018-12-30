@@ -1,6 +1,5 @@
 from tokenizer import lexer, tokens
 import ply.yacc as yacc
-from AbstractSyntaxTree.Identifier import Identifier
 from AbstractSyntaxTree.Pidentifier import Pidentifier
 from AbstractSyntaxTree.Condition import Condition
 from AbstractSyntaxTree.Value import Value
@@ -9,7 +8,7 @@ from AbstractSyntaxTree.Number import Number
 from AbstractSyntaxTree.ArrayAccess import ArrayAccessByNum, ArrayAccessByPidentifier
 from AbstractSyntaxTree.Command import *
 from AbstractSyntaxTree.Declarations import *
-
+from Program import Program
 
 def DEBUG(obj):
     print("[DEBUG]")
@@ -19,7 +18,7 @@ def DEBUG(obj):
 
 def p_program(p):
     '''program      : DECLARE declarations IN commands END'''
-    p[0] = (p[2], p[4])
+    p[0] = Program(p[2], p[4])
 
 
 def p_declarations_VARIABLE(p):
@@ -153,7 +152,7 @@ def p_identifier_arrayAccess_num(p):
 
 
 def p_error(p):
-    raise SyntaxError("Syntax error")
+    raise SyntaxError("Syntax error %s" % p)
 
 
 parser = yacc.yacc()

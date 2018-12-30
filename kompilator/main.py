@@ -15,17 +15,18 @@ def writeToFile(fname, lines):
         for line in lines:
             file.write(line + '\n')
     
-data = readFile('src/program.imp')
-
-
-try:
-    lexer.input(data)
-    for tok in lexer:
-        print(tok)
-    ASTree = parser.parse(data, tracking=True)
-    print(ASTree)
-    writeToFile('out/program.mr', ASTree)
-    pass
-except SyntaxError as err:
-    prRed(err)
-    pass
+fileNames = ['program0', 'program0a', 'program1']
+for fname in fileNames:
+    print("FILE: %s" % fname)
+    data = readFile('examples/%s.imp' % fname)
+    try:
+        # lexer.input(data)
+        # for tok in lexer:
+        #     print(tok)
+        program = parser.parse(data, tracking=True)
+        output = program.generateCode()
+        writeToFile('out/%s.mr' % fname, output)
+        pass
+    except SyntaxError as err:
+        prRed(err)
+        pass
