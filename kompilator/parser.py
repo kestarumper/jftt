@@ -24,7 +24,7 @@ def p_program(p):
 def p_declarations_VARIABLE(p):
     '''declarations : declarations pidentifier SEMI'''
     if not p[1]:
-        p[1] = []
+        p[1] = Declarations(None)
     newVariable = DeclarationVariable(p[2])
     p[0] = p[1].append(newVariable)
 
