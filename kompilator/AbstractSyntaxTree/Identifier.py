@@ -10,5 +10,5 @@ class NotArrayException(Exception):
 
 class Identifier(Expression):
     def __init__(self, name, value):
-        Expression.__init__(self, value)
+        super(Identifier, self).__init__(value)
         self.name = name

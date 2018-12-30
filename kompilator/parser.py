@@ -7,6 +7,9 @@ from AbstractSyntaxTree.Value import Value
 from AbstractSyntaxTree.BinaryOperator import BinaryOperator
 from AbstractSyntaxTree.Number import Number
 from AbstractSyntaxTree.ArrayAccess import ArrayAccessByNum, ArrayAccessByPidentifier
+from AbstractSyntaxTree.Command import *
+from AbstractSyntaxTree.Declarations import *
+
 
 def DEBUG(obj):
     print("[DEBUG]")
@@ -19,27 +22,85 @@ def p_program(p):
     p[0] = (p[2], p[4])
 
 
-def p_declarations(p):
-    '''declarations : declarations pidentifier SEMI
-                    | declarations pidentifier LPAREN num COLON num RPAREN SEMI
-                    | '''
+def p_declarations_VARIABLE(p):
+    '''declarations : declarations pidentifier SEMI'''
+    if not p[1]:
+        p[1] = Declarations(None)
+    newVariable = DeclarationVariable(p[2])
+    p[0] = p[1].append(newVariable)
+
+
+def p_declarations_ARRAY(p):
+    '''declarations : declarations pidentifier LPAREN num COLON num RPAREN SEMI'''
+    if not p[1]:
+        p[1] = Declarations(None)
+    rangeFrom = p[4]
+    rangeTo = p[6]
+    pidentifier = p[2]
+    newArray = DeclarationArray(pidentifier, rangeFrom, rangeTo)
+    p[0] = p[1].append(newArray)
+
+
+def p_declarations_EMPTY(p):
+    '''declarations : '''
+    p[0] = Declarations(None)
+
+
+def p_commands_append(p):
+    '''commands  : commands command'''
+    if not p[1]:
+        p[1] = Commands(None)
+    p[0] = p[1].append(p[2])
 
 
 def p_commands(p):
-    '''commands  : commands command
-                 | command'''
+    '''commands  : command'''
+    p[0] = Commands(p[1])
 
 
-def p_command(p):
-    '''command  : identifier ASSIGN expression SEMI
-                | IF condition THEN commands ELSE commands ENDIF
-                | IF condition THEN commands ENDIF
-                | WHILE condition DO commands ENDWHILE
-                | DO commands WHILE condition ENDDO
-                | FOR pidentifier FROM value TO value DO commands ENDFOR
-                | FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
-                | READ identifier SEMI
-                | WRITE value SEMI'''
+def p_command_ASSIGN(p):
+    '''command  : identifier ASSIGN expression SEMI'''
+    p[0] = CommandAssign(p[1], p[3])
+
+
+def p_command_IFTHENELSE(p):
+    '''command  : IF condition THEN commands ELSE commands ENDIF'''
+    p[0] = CommandIfThenElse(p[2], p[4], p[6])
+
+
+def p_command_IFTHEN(p):
+    '''command  : IF condition THEN commands ENDIF'''
+    p[0] = CommandIfThen(p[2], p[4])
+
+
+def p_command_WHILE(p):
+    '''command  : WHILE condition DO commands ENDWHILE'''
+    p[0] = CommandWhile(p[2], p[4])
+
+
+def p_command_DOWHILE(p):
+    '''command  : DO commands WHILE condition ENDDO'''
+    p[0] = CommandDoWhile(p[2], p[4])
+
+
+def p_command_FOR(p):
+    '''command  : FOR pidentifier FROM value TO value DO commands ENDFOR'''
+    p[0] = CommandForTo(p[2], p[4], p[6], p[8])
+
+
+def p_command_FORDOWNTO(p):
+    '''command  : FOR pidentifier FROM value DOWNTO value DO commands ENDFOR'''
+    p[0] = CommandForDownto(p[2], p[4], p[6], p[8])
+
+
+def p_command_READ(p):
+    '''command  : READ identifier SEMI'''
+    p[0] = CommandRead(p[2])
+
+
+def p_command_WRITE(p):
+    '''command  : WRITE value SEMI'''
+    p[0] = CommandWrite(p[2])
 
 
 def p_expression_value(p):
