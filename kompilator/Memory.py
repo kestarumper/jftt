@@ -9,10 +9,9 @@ class MemoryManager:
 
     def assignMem(self, name):
         if name in self.memmap:
+            raise MemoryException(name)
             return self.memmap[name]
         assignedMemoryBlockId = self.lastblockid
         self.memmap[name] = assignedMemoryBlockId
         self.lastblockid += 1
         return assignedMemoryBlockId
-
-manager = MemoryManager()
