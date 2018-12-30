@@ -30,8 +30,8 @@ Rule 24    condition -> value LT value
 Rule 25    condition -> value GT value
 Rule 26    condition -> value LEQ value
 Rule 27    condition -> value GEQ value
-Rule 28    value -> num
-Rule 29    value -> identifier
+Rule 28    value -> identifier
+Rule 29    value -> num
 Rule 30    identifier -> pidentifier
 Rule 31    identifier -> pidentifier LPAREN pidentifier RPAREN
 Rule 32    identifier -> pidentifier LPAREN num RPAREN
@@ -73,7 +73,7 @@ TO                   : 12
 WHILE                : 10 11
 WRITE                : 15
 error                : 
-num                  : 3 3 28 32
+num                  : 3 3 29 32
 pidentifier          : 2 3 12 13 30 31 31 32
 
 Nonterminals, with rules where they appear
@@ -83,7 +83,7 @@ commands             : 1 5 8 8 9 10 11 12 13
 condition            : 8 9 10 11
 declarations         : 1 2 3
 expression           : 7
-identifier           : 7 14 29
+identifier           : 7 14 28
 program              : 0
 value                : 12 12 13 13 15 16 17 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27
 
@@ -229,18 +229,18 @@ state 9
     (25) condition -> . value GT value
     (26) condition -> . value LEQ value
     (27) condition -> . value GEQ value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     condition                      shift and go to state 21
     value                          shift and go to state 22
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 10
 
@@ -251,18 +251,18 @@ state 10
     (25) condition -> . value GT value
     (26) condition -> . value LEQ value
     (27) condition -> . value GEQ value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     condition                      shift and go to state 25
     value                          shift and go to state 22
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 11
 
@@ -343,17 +343,17 @@ state 14
 state 15
 
     (15) command -> WRITE . value SEMI
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 30
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 16
 
@@ -404,16 +404,16 @@ state 20
     (19) expression -> . value TIMES value
     (20) expression -> . value DIVIDE value
     (21) expression -> . value MODULO value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
     expression                     shift and go to state 32
     value                          shift and go to state 33
 
@@ -444,48 +444,48 @@ state 22
 
 state 23
 
-    (28) value -> num .
+    (28) value -> identifier .
 
-    EQ              reduce using rule 28 (value -> num .)
-    NEQ             reduce using rule 28 (value -> num .)
-    LT              reduce using rule 28 (value -> num .)
-    GT              reduce using rule 28 (value -> num .)
-    LEQ             reduce using rule 28 (value -> num .)
-    GEQ             reduce using rule 28 (value -> num .)
-    SEMI            reduce using rule 28 (value -> num .)
-    PLUS            reduce using rule 28 (value -> num .)
-    MINUS           reduce using rule 28 (value -> num .)
-    TIMES           reduce using rule 28 (value -> num .)
-    DIVIDE          reduce using rule 28 (value -> num .)
-    MODULO          reduce using rule 28 (value -> num .)
-    THEN            reduce using rule 28 (value -> num .)
-    DO              reduce using rule 28 (value -> num .)
-    ENDDO           reduce using rule 28 (value -> num .)
-    TO              reduce using rule 28 (value -> num .)
-    DOWNTO          reduce using rule 28 (value -> num .)
+    EQ              reduce using rule 28 (value -> identifier .)
+    NEQ             reduce using rule 28 (value -> identifier .)
+    LT              reduce using rule 28 (value -> identifier .)
+    GT              reduce using rule 28 (value -> identifier .)
+    LEQ             reduce using rule 28 (value -> identifier .)
+    GEQ             reduce using rule 28 (value -> identifier .)
+    SEMI            reduce using rule 28 (value -> identifier .)
+    PLUS            reduce using rule 28 (value -> identifier .)
+    MINUS           reduce using rule 28 (value -> identifier .)
+    TIMES           reduce using rule 28 (value -> identifier .)
+    DIVIDE          reduce using rule 28 (value -> identifier .)
+    MODULO          reduce using rule 28 (value -> identifier .)
+    THEN            reduce using rule 28 (value -> identifier .)
+    DO              reduce using rule 28 (value -> identifier .)
+    ENDDO           reduce using rule 28 (value -> identifier .)
+    TO              reduce using rule 28 (value -> identifier .)
+    DOWNTO          reduce using rule 28 (value -> identifier .)
 
 
 state 24
 
-    (29) value -> identifier .
+    (29) value -> num .
 
-    EQ              reduce using rule 29 (value -> identifier .)
-    NEQ             reduce using rule 29 (value -> identifier .)
-    LT              reduce using rule 29 (value -> identifier .)
-    GT              reduce using rule 29 (value -> identifier .)
-    LEQ             reduce using rule 29 (value -> identifier .)
-    GEQ             reduce using rule 29 (value -> identifier .)
-    SEMI            reduce using rule 29 (value -> identifier .)
-    PLUS            reduce using rule 29 (value -> identifier .)
-    MINUS           reduce using rule 29 (value -> identifier .)
-    TIMES           reduce using rule 29 (value -> identifier .)
-    DIVIDE          reduce using rule 29 (value -> identifier .)
-    MODULO          reduce using rule 29 (value -> identifier .)
-    THEN            reduce using rule 29 (value -> identifier .)
-    DO              reduce using rule 29 (value -> identifier .)
-    ENDDO           reduce using rule 29 (value -> identifier .)
-    TO              reduce using rule 29 (value -> identifier .)
-    DOWNTO          reduce using rule 29 (value -> identifier .)
+    EQ              reduce using rule 29 (value -> num .)
+    NEQ             reduce using rule 29 (value -> num .)
+    LT              reduce using rule 29 (value -> num .)
+    GT              reduce using rule 29 (value -> num .)
+    LEQ             reduce using rule 29 (value -> num .)
+    GEQ             reduce using rule 29 (value -> num .)
+    SEMI            reduce using rule 29 (value -> num .)
+    PLUS            reduce using rule 29 (value -> num .)
+    MINUS           reduce using rule 29 (value -> num .)
+    TIMES           reduce using rule 29 (value -> num .)
+    DIVIDE          reduce using rule 29 (value -> num .)
+    MODULO          reduce using rule 29 (value -> num .)
+    THEN            reduce using rule 29 (value -> num .)
+    DO              reduce using rule 29 (value -> num .)
+    ENDDO           reduce using rule 29 (value -> num .)
+    TO              reduce using rule 29 (value -> num .)
+    DOWNTO          reduce using rule 29 (value -> num .)
 
 
 state 25
@@ -619,92 +619,92 @@ state 34
 state 35
 
     (22) condition -> value EQ . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 56
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 36
 
     (23) condition -> value NEQ . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 57
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 37
 
     (24) condition -> value LT . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 58
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 38
 
     (25) condition -> value GT . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 59
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 39
 
     (26) condition -> value LEQ . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 60
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 40
 
     (27) condition -> value GEQ . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 61
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 41
 
@@ -746,34 +746,34 @@ state 42
     (25) condition -> . value GT value
     (26) condition -> . value LEQ value
     (27) condition -> . value GEQ value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     condition                      shift and go to state 63
     value                          shift and go to state 22
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 43
 
     (12) command -> FOR pidentifier FROM . value TO value DO commands ENDFOR
     (13) command -> FOR pidentifier FROM . value DOWNTO value DO commands ENDFOR
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 64
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 44
 
@@ -853,77 +853,77 @@ state 49
 state 50
 
     (17) expression -> value PLUS . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 68
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 51
 
     (18) expression -> value MINUS . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 69
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 52
 
     (19) expression -> value TIMES . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 70
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 53
 
     (20) expression -> value DIVIDE . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 71
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 54
 
     (21) expression -> value MODULO . value
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 72
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 55
 
@@ -1234,32 +1234,32 @@ state 76
 state 77
 
     (12) command -> FOR pidentifier FROM value TO . value DO commands ENDFOR
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 81
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 78
 
     (13) command -> FOR pidentifier FROM value DOWNTO . value DO commands ENDFOR
-    (28) value -> . num
-    (29) value -> . identifier
+    (28) value -> . identifier
+    (29) value -> . num
     (30) identifier -> . pidentifier
     (31) identifier -> . pidentifier LPAREN pidentifier RPAREN
     (32) identifier -> . pidentifier LPAREN num RPAREN
 
-    num             shift and go to state 23
+    num             shift and go to state 24
     pidentifier     shift and go to state 13
 
     value                          shift and go to state 82
-    identifier                     shift and go to state 24
+    identifier                     shift and go to state 23
 
 state 79
 

@@ -15,16 +15,16 @@ def writeToFile(fname, lines):
         for line in lines:
             file.write(line + '\n')
     
-data = readFile('program.imp')
+data = readFile('src/program.imp')
 
 
 try:
     lexer.input(data)
     for tok in lexer:
         print(tok)
-    result = parser.parse(data, tracking=True)
-    print(result)
-    writeToFile('program.imp.copy', result)
+    ASTree = parser.parse(data, tracking=True)
+    print(ASTree)
+    writeToFile('out/program.mr', ASTree)
     pass
 except SyntaxError as err:
     prRed(err)

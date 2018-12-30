@@ -1,10 +1,22 @@
 from tokenizer import lexer, tokens
 import ply.yacc as yacc
+from AbstractSyntaxTree.Identifier import Identifier
+from AbstractSyntaxTree.Pidentifier import Pidentifier
+from AbstractSyntaxTree.Condition import Condition
+from AbstractSyntaxTree.Value import Value
+from AbstractSyntaxTree.BinaryOperator import BinaryOperator
+from AbstractSyntaxTree.Number import Number
+from AbstractSyntaxTree.ArrayAccess import ArrayAccessByNum, ArrayAccessByPidentifier
+
+def DEBUG(obj):
+    print("[DEBUG]")
+    print(repr(obj))
+    print("[DEBUGEND]")
 
 
 def p_program(p):
     '''program      : DECLARE declarations IN commands END'''
-    p[0] = "TOP RULE"
+    p[0] = (p[2], p[4])
 
 
 def p_declarations(p):
@@ -30,13 +42,18 @@ def p_command(p):
                 | WRITE value SEMI'''
 
 
+def p_expression_value(p):
+    '''expression   : value'''
+    p[0] = Value(p[1])
+
+
 def p_expression(p):
-    '''expression   : value
-                    | value PLUS value
+    '''expression   : value PLUS value
                     | value MINUS value
                     | value TIMES value
                     | value DIVIDE value
                     | value MODULO value'''
+    p[0] = BinaryOperator(left=p[1], operator=p[2], right=p[3])
 
 
 def p_condition(p):
@@ -46,20 +63,36 @@ def p_condition(p):
                     | value GT value
                     | value LEQ value
                     | value GEQ value'''
+    p[0] = Condition(left=p[1], operator=p[2], right=p[3])
 
 
-def p_value(p):
-    '''value    : num
-                | identifier'''
+def p_value_identifier(p):
+    '''value    : identifier'''
+    p[0] = Value(p[1])
+
+
+def p_value_num(p):
+    '''value    : num'''
+    p[0] = Number(p[1])
 
 
 def p_identifier(p):
-    '''identifier   : pidentifier
-                    | pidentifier LPAREN pidentifier RPAREN
-                    | pidentifier LPAREN num RPAREN'''
+    '''identifier   : pidentifier'''
+    p[0] = Pidentifier(p[1])
+
+
+def p_identifier_arrayAccess_pidentifier(p):
+    '''identifier   : pidentifier LPAREN pidentifier RPAREN'''
+    p[0] = ArrayAccessByPidentifier(p[1], p[3])
+
+
+def p_identifier_arrayAccess_num(p):
+    '''identifier   : pidentifier LPAREN num RPAREN'''
+    p[0] = ArrayAccessByNum(p[1], p[3])
 
 
 def p_error(p):
     raise SyntaxError("Syntax error")
+
 
 parser = yacc.yacc()

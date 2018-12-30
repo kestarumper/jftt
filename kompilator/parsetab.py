@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ASSIGN COLON DECLARE DIVIDE DO DOWNTO ELSE END ENDDO ENDFOR ENDIF ENDWHILE EQ FOR FROM GEQ GT IF IN LEQ LPAREN LT MINUS MODULO NEQ PLUS READ RPAREN SEMI THEN TIMES TO WHILE WRITE num pidentifierprogram      : DECLARE declarations IN commands ENDdeclarations : declarations pidentifier SEMI\n                    | declarations pidentifier LPAREN num COLON num RPAREN SEMI\n                    | commands  : commands command\n                 | commandcommand  : identifier ASSIGN expression SEMI\n                | IF condition THEN commands ELSE commands ENDIF\n                | IF condition THEN commands ENDIF\n                | WHILE condition DO commands ENDWHILE\n                | DO commands WHILE condition ENDDO\n                | FOR pidentifier FROM value TO value DO commands ENDFOR\n                | FOR pidentifier FROM value DOWNTO value DO commands ENDFOR\n                | READ identifier SEMI\n                | WRITE value SEMIexpression   : value\n                    | value PLUS value\n                    | value MINUS value\n                    | value TIMES value\n                    | value DIVIDE value\n                    | value MODULO valuecondition    : value EQ value\n                    | value NEQ value\n                    | value LT value\n                    | value GT value\n                    | value LEQ value\n                    | value GEQ valuevalue    : num\n                | identifieridentifier   : pidentifier\n                    | pidentifier LPAREN pidentifier RPAREN\n                    | pidentifier LPAREN num RPAREN'
+_lr_signature = 'ASSIGN COLON DECLARE DIVIDE DO DOWNTO ELSE END ENDDO ENDFOR ENDIF ENDWHILE EQ FOR FROM GEQ GT IF IN LEQ LPAREN LT MINUS MODULO NEQ PLUS READ RPAREN SEMI THEN TIMES TO WHILE WRITE num pidentifierprogram      : DECLARE declarations IN commands ENDdeclarations : declarations pidentifier SEMI\n                    | declarations pidentifier LPAREN num COLON num RPAREN SEMI\n                    | commands  : commands command\n                 | commandcommand  : identifier ASSIGN expression SEMI\n                | IF condition THEN commands ELSE commands ENDIF\n                | IF condition THEN commands ENDIF\n                | WHILE condition DO commands ENDWHILE\n                | DO commands WHILE condition ENDDO\n                | FOR pidentifier FROM value TO value DO commands ENDFOR\n                | FOR pidentifier FROM value DOWNTO value DO commands ENDFOR\n                | READ identifier SEMI\n                | WRITE value SEMIexpression   : valueexpression   : value PLUS value\n                    | value MINUS value\n                    | value TIMES value\n                    | value DIVIDE value\n                    | value MODULO valuecondition    : value EQ value\n                    | value NEQ value\n                    | value LT value\n                    | value GT value\n                    | value LEQ value\n                    | value GEQ valuevalue    : identifiervalue    : numidentifier   : pidentifieridentifier   : pidentifier LPAREN pidentifier RPARENidentifier   : pidentifier LPAREN num RPAREN'
     
-_lr_action_items = {'DECLARE':([0,],[2,]),'$end':([1,18,],[0,-1,]),'IN':([2,3,16,83,],[-4,4,-2,-3,]),'pidentifier':([2,3,4,6,7,9,10,11,12,14,15,16,19,20,26,28,34,35,36,37,38,39,40,41,42,43,46,47,49,50,51,52,53,54,55,62,73,74,75,76,77,78,80,83,84,85,86,87,88,89,90,],[-4,5,13,13,-6,13,13,13,27,13,13,-2,-5,13,13,44,13,13,13,13,13,13,13,13,13,13,-14,-15,-7,13,13,13,13,13,13,13,13,-9,-10,-11,13,13,13,-3,-8,13,13,13,13,-12,-13,]),'IF':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[9,9,-6,9,-5,9,9,9,-14,-15,-7,9,9,9,-9,-10,-11,9,-8,9,9,9,9,-12,-13,]),'WHILE':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[10,10,-6,10,-5,42,10,10,-14,-15,-7,10,10,10,-9,-10,-11,10,-8,10,10,10,10,-12,-13,]),'DO':([4,6,7,11,13,19,23,24,25,26,34,41,46,47,49,55,56,57,58,59,60,61,62,63,65,66,73,74,75,76,80,81,82,84,85,86,87,88,89,90,],[11,11,-6,11,-30,-5,-28,-29,41,11,11,11,-14,-15,-7,11,-22,-23,-24,-25,-26,-27,11,41,-31,-32,11,-9,-10,-11,11,85,86,-8,11,11,11,11,-12,-13,]),'FOR':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[12,12,-6,12,-5,12,12,12,-14,-15,-7,12,12,12,-9,-10,-11,12,-8,12,12,12,12,-12,-13,]),'READ':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[14,14,-6,14,-5,14,14,14,-14,-15,-7,14,14,14,-9,-10,-11,14,-8,14,14,14,14,-12,-13,]),'WRITE':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[15,15,-6,15,-5,15,15,15,-14,-15,-7,15,15,15,-9,-10,-11,15,-8,15,15,15,15,-12,-13,]),'SEMI':([5,13,23,24,29,30,32,33,65,66,68,69,70,71,72,79,],[16,-30,-28,-29,46,47,49,-16,-31,-32,-17,-18,-19,-20,-21,83,]),'LPAREN':([5,13,],[17,28,]),'END':([6,7,19,46,47,49,74,75,76,84,89,90,],[18,-6,-5,-14,-15,-7,-9,-10,-11,-8,-12,-13,]),'ELSE':([7,19,46,47,49,55,74,75,76,84,89,90,],[-6,-5,-14,-15,-7,73,-9,-10,-11,-8,-12,-13,]),'ENDIF':([7,19,46,47,49,55,74,75,76,80,84,89,90,],[-6,-5,-14,-15,-7,74,-9,-10,-11,84,-8,-12,-13,]),'ENDWHILE':([7,19,46,47,49,62,74,75,76,84,89,90,],[-6,-5,-14,-15,-7,75,-9,-10,-11,-8,-12,-13,]),'ENDFOR':([7,19,46,47,49,74,75,76,84,87,88,89,90,],[-6,-5,-14,-15,-7,-9,-10,-11,-8,89,90,-12,-13,]),'ASSIGN':([8,13,65,66,],[20,-30,-31,-32,]),'num':([9,10,15,17,20,28,35,36,37,38,39,40,42,43,48,50,51,52,53,54,77,78,],[23,23,23,31,23,45,23,23,23,23,23,23,23,23,67,23,23,23,23,23,23,23,]),'EQ':([13,22,23,24,65,66,],[-30,35,-28,-29,-31,-32,]),'NEQ':([13,22,23,24,65,66,],[-30,36,-28,-29,-31,-32,]),'LT':([13,22,23,24,65,66,],[-30,37,-28,-29,-31,-32,]),'GT':([13,22,23,24,65,66,],[-30,38,-28,-29,-31,-32,]),'LEQ':([13,22,23,24,65,66,],[-30,39,-28,-29,-31,-32,]),'GEQ':([13,22,23,24,65,66,],[-30,40,-28,-29,-31,-32,]),'PLUS':([13,23,24,33,65,66,],[-30,-28,-29,50,-31,-32,]),'MINUS':([13,23,24,33,65,66,],[-30,-28,-29,51,-31,-32,]),'TIMES':([13,23,24,33,65,66,],[-30,-28,-29,52,-31,-32,]),'DIVIDE':([13,23,24,33,65,66,],[-30,-28,-29,53,-31,-32,]),'MODULO':([13,23,24,33,65,66,],[-30,-28,-29,54,-31,-32,]),'THEN':([13,21,23,24,56,57,58,59,60,61,65,66,],[-30,34,-28,-29,-22,-23,-24,-25,-26,-27,-31,-32,]),'ENDDO':([13,23,24,56,57,58,59,60,61,63,65,66,],[-30,-28,-29,-22,-23,-24,-25,-26,-27,76,-31,-32,]),'TO':([13,23,24,64,65,66,],[-30,-28,-29,77,-31,-32,]),'DOWNTO':([13,23,24,64,65,66,],[-30,-28,-29,78,-31,-32,]),'FROM':([27,],[43,]),'COLON':([31,],[48,]),'RPAREN':([44,45,67,],[65,66,79,]),}
+_lr_action_items = {'DECLARE':([0,],[2,]),'$end':([1,18,],[0,-1,]),'IN':([2,3,16,83,],[-4,4,-2,-3,]),'pidentifier':([2,3,4,6,7,9,10,11,12,14,15,16,19,20,26,28,34,35,36,37,38,39,40,41,42,43,46,47,49,50,51,52,53,54,55,62,73,74,75,76,77,78,80,83,84,85,86,87,88,89,90,],[-4,5,13,13,-6,13,13,13,27,13,13,-2,-5,13,13,44,13,13,13,13,13,13,13,13,13,13,-14,-15,-7,13,13,13,13,13,13,13,13,-9,-10,-11,13,13,13,-3,-8,13,13,13,13,-12,-13,]),'IF':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[9,9,-6,9,-5,9,9,9,-14,-15,-7,9,9,9,-9,-10,-11,9,-8,9,9,9,9,-12,-13,]),'WHILE':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[10,10,-6,10,-5,42,10,10,-14,-15,-7,10,10,10,-9,-10,-11,10,-8,10,10,10,10,-12,-13,]),'DO':([4,6,7,11,13,19,23,24,25,26,34,41,46,47,49,55,56,57,58,59,60,61,62,63,65,66,73,74,75,76,80,81,82,84,85,86,87,88,89,90,],[11,11,-6,11,-30,-5,-28,-29,41,11,11,11,-14,-15,-7,11,-22,-23,-24,-25,-26,-27,11,41,-31,-32,11,-9,-10,-11,11,85,86,-8,11,11,11,11,-12,-13,]),'FOR':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[12,12,-6,12,-5,12,12,12,-14,-15,-7,12,12,12,-9,-10,-11,12,-8,12,12,12,12,-12,-13,]),'READ':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[14,14,-6,14,-5,14,14,14,-14,-15,-7,14,14,14,-9,-10,-11,14,-8,14,14,14,14,-12,-13,]),'WRITE':([4,6,7,11,19,26,34,41,46,47,49,55,62,73,74,75,76,80,84,85,86,87,88,89,90,],[15,15,-6,15,-5,15,15,15,-14,-15,-7,15,15,15,-9,-10,-11,15,-8,15,15,15,15,-12,-13,]),'SEMI':([5,13,23,24,29,30,32,33,65,66,68,69,70,71,72,79,],[16,-30,-28,-29,46,47,49,-16,-31,-32,-17,-18,-19,-20,-21,83,]),'LPAREN':([5,13,],[17,28,]),'END':([6,7,19,46,47,49,74,75,76,84,89,90,],[18,-6,-5,-14,-15,-7,-9,-10,-11,-8,-12,-13,]),'ELSE':([7,19,46,47,49,55,74,75,76,84,89,90,],[-6,-5,-14,-15,-7,73,-9,-10,-11,-8,-12,-13,]),'ENDIF':([7,19,46,47,49,55,74,75,76,80,84,89,90,],[-6,-5,-14,-15,-7,74,-9,-10,-11,84,-8,-12,-13,]),'ENDWHILE':([7,19,46,47,49,62,74,75,76,84,89,90,],[-6,-5,-14,-15,-7,75,-9,-10,-11,-8,-12,-13,]),'ENDFOR':([7,19,46,47,49,74,75,76,84,87,88,89,90,],[-6,-5,-14,-15,-7,-9,-10,-11,-8,89,90,-12,-13,]),'ASSIGN':([8,13,65,66,],[20,-30,-31,-32,]),'num':([9,10,15,17,20,28,35,36,37,38,39,40,42,43,48,50,51,52,53,54,77,78,],[24,24,24,31,24,45,24,24,24,24,24,24,24,24,67,24,24,24,24,24,24,24,]),'EQ':([13,22,23,24,65,66,],[-30,35,-28,-29,-31,-32,]),'NEQ':([13,22,23,24,65,66,],[-30,36,-28,-29,-31,-32,]),'LT':([13,22,23,24,65,66,],[-30,37,-28,-29,-31,-32,]),'GT':([13,22,23,24,65,66,],[-30,38,-28,-29,-31,-32,]),'LEQ':([13,22,23,24,65,66,],[-30,39,-28,-29,-31,-32,]),'GEQ':([13,22,23,24,65,66,],[-30,40,-28,-29,-31,-32,]),'PLUS':([13,23,24,33,65,66,],[-30,-28,-29,50,-31,-32,]),'MINUS':([13,23,24,33,65,66,],[-30,-28,-29,51,-31,-32,]),'TIMES':([13,23,24,33,65,66,],[-30,-28,-29,52,-31,-32,]),'DIVIDE':([13,23,24,33,65,66,],[-30,-28,-29,53,-31,-32,]),'MODULO':([13,23,24,33,65,66,],[-30,-28,-29,54,-31,-32,]),'THEN':([13,21,23,24,56,57,58,59,60,61,65,66,],[-30,34,-28,-29,-22,-23,-24,-25,-26,-27,-31,-32,]),'ENDDO':([13,23,24,56,57,58,59,60,61,63,65,66,],[-30,-28,-29,-22,-23,-24,-25,-26,-27,76,-31,-32,]),'TO':([13,23,24,64,65,66,],[-30,-28,-29,77,-31,-32,]),'DOWNTO':([13,23,24,64,65,66,],[-30,-28,-29,78,-31,-32,]),'FROM':([27,],[43,]),'COLON':([31,],[48,]),'RPAREN':([44,45,67,],[65,66,79,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'declarations':([2,],[3,]),'commands':([4,11,34,41,73,85,86,],[6,26,55,62,80,87,88,]),'command':([4,6,11,26,34,41,55,62,73,80,85,86,87,88,],[7,19,7,19,7,7,19,19,7,19,7,7,19,19,]),'identifier':([4,6,9,10,11,14,15,20,26,34,35,36,37,38,39,40,41,42,43,50,51,52,53,54,55,62,73,77,78,80,85,86,87,88,],[8,8,24,24,8,29,24,24,8,8,24,24,24,24,24,24,8,24,24,24,24,24,24,24,8,8,8,24,24,8,8,8,8,8,]),'condition':([9,10,42,],[21,25,63,]),'value':([9,10,15,20,35,36,37,38,39,40,42,43,50,51,52,53,54,77,78,],[22,22,30,33,56,57,58,59,60,61,22,64,68,69,70,71,72,81,82,]),'expression':([20,],[32,]),}
+_lr_goto_items = {'program':([0,],[1,]),'declarations':([2,],[3,]),'commands':([4,11,34,41,73,85,86,],[6,26,55,62,80,87,88,]),'command':([4,6,11,26,34,41,55,62,73,80,85,86,87,88,],[7,19,7,19,7,7,19,19,7,19,7,7,19,19,]),'identifier':([4,6,9,10,11,14,15,20,26,34,35,36,37,38,39,40,41,42,43,50,51,52,53,54,55,62,73,77,78,80,85,86,87,88,],[8,8,23,23,8,29,23,23,8,8,23,23,23,23,23,23,8,23,23,23,23,23,23,23,8,8,8,23,23,8,8,8,8,8,]),'condition':([9,10,42,],[21,25,63,]),'value':([9,10,15,20,35,36,37,38,39,40,42,43,50,51,52,53,54,77,78,],[22,22,30,33,56,57,58,59,60,61,22,64,68,69,70,71,72,81,82,]),'expression':([20,],[32,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,36 +27,36 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> DECLARE declarations IN commands END','program',5,'p_program','parser.py',6),
-  ('declarations -> declarations pidentifier SEMI','declarations',3,'p_declarations','parser.py',11),
-  ('declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI','declarations',8,'p_declarations','parser.py',12),
-  ('declarations -> <empty>','declarations',0,'p_declarations','parser.py',13),
-  ('commands -> commands command','commands',2,'p_commands','parser.py',17),
-  ('commands -> command','commands',1,'p_commands','parser.py',18),
-  ('command -> identifier ASSIGN expression SEMI','command',4,'p_command','parser.py',22),
-  ('command -> IF condition THEN commands ELSE commands ENDIF','command',7,'p_command','parser.py',23),
-  ('command -> IF condition THEN commands ENDIF','command',5,'p_command','parser.py',24),
-  ('command -> WHILE condition DO commands ENDWHILE','command',5,'p_command','parser.py',25),
-  ('command -> DO commands WHILE condition ENDDO','command',5,'p_command','parser.py',26),
-  ('command -> FOR pidentifier FROM value TO value DO commands ENDFOR','command',9,'p_command','parser.py',27),
-  ('command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR','command',9,'p_command','parser.py',28),
-  ('command -> READ identifier SEMI','command',3,'p_command','parser.py',29),
-  ('command -> WRITE value SEMI','command',3,'p_command','parser.py',30),
-  ('expression -> value','expression',1,'p_expression','parser.py',34),
-  ('expression -> value PLUS value','expression',3,'p_expression','parser.py',35),
-  ('expression -> value MINUS value','expression',3,'p_expression','parser.py',36),
-  ('expression -> value TIMES value','expression',3,'p_expression','parser.py',37),
-  ('expression -> value DIVIDE value','expression',3,'p_expression','parser.py',38),
-  ('expression -> value MODULO value','expression',3,'p_expression','parser.py',39),
-  ('condition -> value EQ value','condition',3,'p_condition','parser.py',43),
-  ('condition -> value NEQ value','condition',3,'p_condition','parser.py',44),
-  ('condition -> value LT value','condition',3,'p_condition','parser.py',45),
-  ('condition -> value GT value','condition',3,'p_condition','parser.py',46),
-  ('condition -> value LEQ value','condition',3,'p_condition','parser.py',47),
-  ('condition -> value GEQ value','condition',3,'p_condition','parser.py',48),
-  ('value -> num','value',1,'p_value','parser.py',52),
-  ('value -> identifier','value',1,'p_value','parser.py',53),
-  ('identifier -> pidentifier','identifier',1,'p_identifier','parser.py',57),
-  ('identifier -> pidentifier LPAREN pidentifier RPAREN','identifier',4,'p_identifier','parser.py',58),
-  ('identifier -> pidentifier LPAREN num RPAREN','identifier',4,'p_identifier','parser.py',59),
+  ('program -> DECLARE declarations IN commands END','program',5,'p_program','parser.py',18),
+  ('declarations -> declarations pidentifier SEMI','declarations',3,'p_declarations','parser.py',23),
+  ('declarations -> declarations pidentifier LPAREN num COLON num RPAREN SEMI','declarations',8,'p_declarations','parser.py',24),
+  ('declarations -> <empty>','declarations',0,'p_declarations','parser.py',25),
+  ('commands -> commands command','commands',2,'p_commands','parser.py',29),
+  ('commands -> command','commands',1,'p_commands','parser.py',30),
+  ('command -> identifier ASSIGN expression SEMI','command',4,'p_command','parser.py',34),
+  ('command -> IF condition THEN commands ELSE commands ENDIF','command',7,'p_command','parser.py',35),
+  ('command -> IF condition THEN commands ENDIF','command',5,'p_command','parser.py',36),
+  ('command -> WHILE condition DO commands ENDWHILE','command',5,'p_command','parser.py',37),
+  ('command -> DO commands WHILE condition ENDDO','command',5,'p_command','parser.py',38),
+  ('command -> FOR pidentifier FROM value TO value DO commands ENDFOR','command',9,'p_command','parser.py',39),
+  ('command -> FOR pidentifier FROM value DOWNTO value DO commands ENDFOR','command',9,'p_command','parser.py',40),
+  ('command -> READ identifier SEMI','command',3,'p_command','parser.py',41),
+  ('command -> WRITE value SEMI','command',3,'p_command','parser.py',42),
+  ('expression -> value','expression',1,'p_expression_value','parser.py',46),
+  ('expression -> value PLUS value','expression',3,'p_expression','parser.py',51),
+  ('expression -> value MINUS value','expression',3,'p_expression','parser.py',52),
+  ('expression -> value TIMES value','expression',3,'p_expression','parser.py',53),
+  ('expression -> value DIVIDE value','expression',3,'p_expression','parser.py',54),
+  ('expression -> value MODULO value','expression',3,'p_expression','parser.py',55),
+  ('condition -> value EQ value','condition',3,'p_condition','parser.py',60),
+  ('condition -> value NEQ value','condition',3,'p_condition','parser.py',61),
+  ('condition -> value LT value','condition',3,'p_condition','parser.py',62),
+  ('condition -> value GT value','condition',3,'p_condition','parser.py',63),
+  ('condition -> value LEQ value','condition',3,'p_condition','parser.py',64),
+  ('condition -> value GEQ value','condition',3,'p_condition','parser.py',65),
+  ('value -> identifier','value',1,'p_value_identifier','parser.py',70),
+  ('value -> num','value',1,'p_value_num','parser.py',75),
+  ('identifier -> pidentifier','identifier',1,'p_identifier','parser.py',80),
+  ('identifier -> pidentifier LPAREN pidentifier RPAREN','identifier',4,'p_identifier_arrayAccess_pidentifier','parser.py',85),
+  ('identifier -> pidentifier LPAREN num RPAREN','identifier',4,'p_identifier_arrayAccess_num','parser.py',89),
 ]
