@@ -5,12 +5,21 @@ class Program:
         self.memoryManager = MemoryManager()
         self.declarations = declarations
         self.commands = commands
-        self.assignMemoryToIdentifiers()
+        self.instructions = []
+        self.assignMemoryToDeclarations()
+        self.processCommands()
 
-    def assignMemoryToIdentifiers(self):
+    def assignMemoryToDeclarations(self):
         for declaration in self.declarations:
             self.memoryManager.assignMem(declaration.pidentifier)
+
+
+    def processCommands(self):
+        for com in self.commands:
+            instructionSet = com.generateCode()
+            for instr in instructionSet:
+                self.instructions.append(instr)
+
     
     def generateCode(self):
-        result = []
-        return result + ["HALT"]
+        return '\n'.join(self.instructions + ["HALT"])

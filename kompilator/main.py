@@ -4,16 +4,12 @@ def prCyan(skk): print("\033[96m{}\033[00m".format(skk))
 def prRed(skk): print("\033[91m{}\033[00m".format(skk))
 
 def readFile(fname):
-    data = []
     with open(fname, "r") as file:
-        for line in file:
-            data.append(line)
-    return ''.join(data)
+        return file.read()
 
-def writeToFile(fname, lines):
+def writeToFile(fname, data):
     with open(fname, "w") as file:
-        for line in lines:
-            file.write(line + '\n')
+        file.write(data)
     
 fileNames = ['program0', 'program0a', 'program1']
 for fname in fileNames:

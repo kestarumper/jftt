@@ -9,8 +9,7 @@ class MemoryManager:
 
     def assignMem(self, name):
         if name in self.memmap:
-            raise MemoryException(name)
-            return self.memmap[name]
+            raise MemoryException("Duplicate declaration: %s" % name)
         assignedMemoryBlockId = self.lastblockid
         self.memmap[name] = assignedMemoryBlockId
         self.lastblockid += 1
