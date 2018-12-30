@@ -1,6 +1,6 @@
 from tokenizer import lexer, tokens
 import ply.yacc as yacc
-from AbstractSyntaxTree.Pidentifier import Pidentifier
+from AbstractSyntaxTree.Identifier import Identifier
 from AbstractSyntaxTree.Condition import Condition
 from AbstractSyntaxTree.Value import Value
 from AbstractSyntaxTree.BinaryOperator import BinaryOperator
@@ -18,13 +18,13 @@ def DEBUG(obj):
 
 def p_program(p):
     '''program      : DECLARE declarations IN commands END'''
-    p[0] = Program(p[2], p[4])
+    p[0] = Program(p[2].declarations, p[4].commands)
 
 
 def p_declarations_VARIABLE(p):
     '''declarations : declarations pidentifier SEMI'''
     if not p[1]:
-        p[1] = Declarations(None)
+        p[1] = []
     newVariable = DeclarationVariable(p[2])
     p[0] = p[1].append(newVariable)
 
@@ -138,7 +138,7 @@ def p_value_num(p):
 
 def p_identifier(p):
     '''identifier   : pidentifier'''
-    p[0] = Pidentifier(p[1])
+    p[0] = Identifier(p[1])
 
 
 def p_identifier_arrayAccess_pidentifier(p):

@@ -43,8 +43,6 @@ tokens = [
     'pidentifier'
 ] + list(reserved.values())
 
-reserved_re = '|'.join(reserved.values())
-
 t_ignore = ' \t'
 t_PLUS = r'\+'
 t_MINUS = r'\-'

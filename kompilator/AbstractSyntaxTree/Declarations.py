@@ -11,6 +11,7 @@ class Declarations:
 
 class DeclarationVariable:
     def __init__(self, pidentifier, isarr=False):
+        self.memoryId = None
         self.pidentifier = pidentifier
         self.isarr = isarr
 
