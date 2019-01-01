@@ -11,17 +11,18 @@ def writeToFile(fname, data):
     with open(fname, "w") as file:
         file.write(data)
     
-fileNames = ['program0', 'program0a', 'program1']
+fileNames = ['program0']
+# fileNames = ['program0', 'program0a', 'program1']
 for fname in fileNames:
     print("FILE: %s" % fname)
-    data = readFile('examples/%s.imp' % fname)
+    data = readFile('test/src/%s.imp' % fname)
     try:
         # lexer.input(data)
         # for tok in lexer:
         #     print(tok)
         program = parser.parse(data, tracking=True)
         output = program.generateCode()
-        writeToFile('out/%s.mr' % fname, output)
+        writeToFile('test/out/%s.mr' % fname, output)
         pass
     except SyntaxError as err:
         prRed(err)

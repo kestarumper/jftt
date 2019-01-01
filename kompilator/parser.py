@@ -1,14 +1,12 @@
 from tokenizer import lexer, tokens
 import ply.yacc as yacc
-from AbstractSyntaxTree.Identifier import Identifier
 from AbstractSyntaxTree.Condition import Condition
-from AbstractSyntaxTree.Value import Value
-from AbstractSyntaxTree.BinaryOperator import BinaryOperator
-from AbstractSyntaxTree.Number import Number
+from AbstractSyntaxTree.Expression import ValueFromIdentifier, Number, Expression, Identifier, BinaryOperator
 from AbstractSyntaxTree.ArrayAccess import ArrayAccessByNum, ArrayAccessByPidentifier
 from AbstractSyntaxTree.Command import *
 from AbstractSyntaxTree.Declarations import *
 from Program import Program
+
 
 def DEBUG(obj):
     print("[DEBUG]")
@@ -104,7 +102,7 @@ def p_command_WRITE(p):
 
 def p_expression_value(p):
     '''expression   : value'''
-    p[0] = Value(p[1])
+    p[0] = Expression(p[1])
 
 
 def p_expression(p):
@@ -128,7 +126,7 @@ def p_condition(p):
 
 def p_value_identifier(p):
     '''value    : identifier'''
-    p[0] = Value(p[1])
+    p[0] = ValueFromIdentifier(p[1])
 
 
 def p_value_num(p):

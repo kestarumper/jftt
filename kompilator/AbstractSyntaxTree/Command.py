@@ -1,13 +1,11 @@
+import Instructions
+
 class Command:
     def __init__(self):
-        self.instructions = []
+        pass
 
-    def generateCode(self):
-        return self.instructions
-
-    def addInstruction(self, instr, X, Y=""):
-        instruction = "%s %s %s" % (instr, X, Y)
-        self.instructions.append(instruction)
+    def generateCode(self, program):
+        raise Exception("generateCode() not defined for %s" % self.__class__)
 
 
 class Commands:
@@ -27,6 +25,8 @@ class CommandAssign(Command):
         self.identifier = identifier
         self.expression = expression
 
+    def generateCode(self, p):
+        return Instructions.ASSIGN(p, self.identifier, self.expression)
 
 class CommandIfThen(Command):
     def __init__(self, condition, thenCommands):
@@ -40,13 +40,25 @@ class CommandIfThenElse(CommandIfThen):
         super(CommandIfThenElse, self).__init__(condition, thenCommands)
         self.elseCommands = elseCommands
 
+    def generateCode(self, p):
+        instructions = []
+        for com in self.elseCommands:
+            instructions += com.generateCode(p)
+        return instructions
 
 class CommandWhile(Command):
     def __init__(self, condition, commands):
         super(CommandWhile, self).__init__()
         self.condition = condition
-        self.commands = commands
+        self.commands = commands.commands
 
+    def generateCode(self, p):
+        instructions = []
+        beforeCtr = p.getCounter()
+        for com in self.commands:
+            instructions += com.generateCode(p)
+        afterCtr = p.getCounter()
+        return instructions
 
 class CommandDoWhile(Command):
     def __init__(self, commands, condition):
@@ -75,8 +87,14 @@ class CommandRead(Command):
         super(CommandRead, self).__init__()
         self.identifier = identifier
 
+    def generateCode(self, p):
+        return Instructions.READ(p, self.identifier)
+
 
 class CommandWrite(Command):
     def __init__(self, value):
         super(CommandWrite, self).__init__()
         self.value = value
+
+    def generateCode(self, p):
+        return Instructions.WRITE(p, self.value)
