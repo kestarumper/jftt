@@ -95,17 +95,19 @@ def LOAD_MEM_TO_REG(p, memoryId, reg):
 
 
 def LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, identifier, reg):
-    instructions = []
     memoryId = identifier.memoryId
-    instructions += LOAD_MEM_TO_REG(p, memoryId, reg)
-    return instructions
+    return LOAD_MEM_TO_REG(p, memoryId, reg)
 
 
-def PLUS(p, leftValue, rightValue, destReg):
+def LOAD_NUMBER_VALUE_TO_REGISTER(p, number, reg):
+    return setRegisterConst(p, reg, number)
+
+
+def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     instructions = []
-    if destReg == REG.C:
-        raise Exception("Cannot use REG.C as destination")
+    if destReg == helpReg:
+        raise Exception("Cannot use same registers")
     instructions += leftValue.evalToRegInstr(p, destReg)
-    instructions += rightValue.evalToRegInstr(p, REG.C)
-    instructions += ADD(p, destReg, REG.C)
+    instructions += rightValue.evalToRegInstr(p, helpReg)
+    instructions += ADD(p, destReg, helpReg)
     return instructions

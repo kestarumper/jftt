@@ -7,8 +7,11 @@ class Expression:
 
 
 class Number(Expression):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, num):
+        self.num = num
+
+    def evalToRegInstr(self, p, reg):
+        return Instructions.LOAD_NUMBER_VALUE_TO_REGISTER(p, self.num, reg)
 
 
 class ValueFromIdentifier(Expression):
