@@ -8,17 +8,6 @@ class Command:
         raise Exception("generateCode() not defined for %s" % self.__class__)
 
 
-class Commands:
-    def __init__(self, command):
-        self.commands = []
-        if command:
-            self.append(command)
-
-    def append(self, command):
-        self.commands.append(command)
-        return self
-
-
 class CommandAssign(Command):
     def __init__(self, identifier, expression):
         super(CommandAssign, self).__init__()
@@ -50,7 +39,7 @@ class CommandWhile(Command):
     def __init__(self, condition, commands):
         super(CommandWhile, self).__init__()
         self.condition = condition
-        self.commands = commands.commands
+        self.commands = commands
 
     def generateCode(self, p):
         instructions = []

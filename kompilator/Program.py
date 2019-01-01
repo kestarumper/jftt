@@ -7,7 +7,7 @@ class Program:
         self.commands = commands
         self.instructions = []
         self.counter = 0
-        self.assignMemoryToDeclarations()
+        self.listDeclarationsMemory()
         self.processCommands()
 
     def getCounter(self):
@@ -17,7 +17,7 @@ class Program:
         self.counter += 1
         return self
 
-    def assignMemoryToDeclarations(self):
+    def listDeclarationsMemory(self):
         print([(decl.pidentifier, decl.memoryId) for decl in self.declarations])
 
     def makeInstr(self, instr, X, Y=""):

@@ -16,43 +16,46 @@ def DEBUG(obj):
 
 def p_program(p):
     '''program      : DECLARE declarations IN commands END'''
-    p[0] = Program(p[2].declarations, p[4].commands)
+    p[0] = Program(p[2], p[4])
 
 
 def p_declarations_VARIABLE(p):
     '''declarations : declarations pidentifier SEMI'''
     if not p[1]:
-        p[1] = Declarations(None)
+        p[1] = []
     newVariable = DeclarationVariable(p[2])
-    p[0] = p[1].append(newVariable)
+    p[1].append(newVariable)
+    p[0] = p[1]
 
 
 def p_declarations_ARRAY(p):
     '''declarations : declarations pidentifier LPAREN num COLON num RPAREN SEMI'''
     if not p[1]:
-        p[1] = Declarations(None)
+        p[1] = []
     rangeFrom = p[4]
     rangeTo = p[6]
     pidentifier = p[2]
     newArray = DeclarationArray(pidentifier, rangeFrom, rangeTo)
-    p[0] = p[1].append(newArray)
+    p[1].append(newArray)
+    p[0] = p[1]
 
 
 def p_declarations_EMPTY(p):
     '''declarations : '''
-    p[0] = Declarations(None)
+    p[0] = []
 
 
 def p_commands_append(p):
     '''commands  : commands command'''
     if not p[1]:
-        p[1] = Commands(None)
-    p[0] = p[1].append(p[2])
+        p[1] = []
+    p[1].append(p[2])
+    p[0] = p[1]
 
 
 def p_commands(p):
     '''commands  : command'''
-    p[0] = Commands(p[1])
+    p[0] = [p[1]]
 
 
 def p_command_ASSIGN(p):

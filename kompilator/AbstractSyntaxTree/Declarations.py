@@ -1,22 +1,16 @@
-class Declarations:
-    def __init__(self, declaration):
-        self.declarations = []
-        if declaration:
-            self.append(declaration)
-
-    def append(self, declaration):
-        self.declarations.append(declaration)
-        return self
-
+from Memory import manager as MemoryManager
 
 class DeclarationVariable:
     def __init__(self, pidentifier, isarr=False):
-        self.memoryId = None
         self.pidentifier = pidentifier
         self.isarr = isarr
 
     def isArray(self):
         return self.isarr == True
+
+    @property
+    def memoryId(self):
+        return MemoryManager.getBlockId(self.pidentifier)
 
 
 class DeclarationArray(DeclarationVariable):
