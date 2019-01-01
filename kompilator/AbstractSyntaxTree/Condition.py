@@ -1,6 +1,6 @@
-from AbstractSyntaxTree.Expression import Expression
+import Instructions
 
-class Condition(Expression):
+class Condition:
     operation = {
         "EQ": lambda l, r: (l, r),
         "NEQ": lambda l, r: (l, r),
@@ -15,6 +15,8 @@ class Condition(Expression):
         self.operator = operator
         self.right = right
 
-    def get_value(self):
-        # return Condition.operation[self.operator](self.left, self.right)
-        return (self.left, self.operator, self.right)
+    def generateCode(self, p):
+        if self.operator == '>':
+            return Instructions.CONDITION_GT(p, self.left, self.right)
+        else:
+            raise Exception("Undefined CONDITION operator '%s'" % self.operator)

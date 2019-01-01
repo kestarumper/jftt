@@ -30,10 +30,7 @@ class CommandIfThenElse(CommandIfThen):
         self.elseCommands = elseCommands
 
     def generateCode(self, p):
-        instructions = []
-        for com in self.elseCommands:
-            instructions += com.generateCode(p)
-        return instructions
+        Instructions.IF_THEN_ELSE(p, self.condition, self.thenCommands, self.elseCommands)
 
 class CommandWhile(Command):
     def __init__(self, condition, commands):
@@ -42,12 +39,10 @@ class CommandWhile(Command):
         self.commands = commands
 
     def generateCode(self, p):
-        instructions = []
         beforeCtr = p.getCounter()
         for com in self.commands:
-            instructions += com.generateCode(p)
+            com.generateCode(p)
         afterCtr = p.getCounter()
-        return instructions
 
 class CommandDoWhile(Command):
     def __init__(self, commands, condition):
@@ -77,7 +72,7 @@ class CommandRead(Command):
         self.identifier = identifier
 
     def generateCode(self, p):
-        return Instructions.READ(p, self.identifier)
+        Instructions.READ(p, self.identifier)
 
 
 class CommandWrite(Command):
@@ -86,4 +81,4 @@ class CommandWrite(Command):
         self.value = value
 
     def generateCode(self, p):
-        return Instructions.WRITE(p, self.value)
+        Instructions.WRITE(p, self.value)

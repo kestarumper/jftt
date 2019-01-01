@@ -1,6 +1,5 @@
 from Memory import manager as MemoryManager
 
-
 class Program:
     def __init__(self, declarations, commands):
         self.declarations = declarations
@@ -23,13 +22,11 @@ class Program:
     def makeInstr(self, instr, X, Y=""):
         instrStr = "%s %s %s" % (instr, X, Y)
         self.incCounter()
-        return instrStr
+        self.instructions.append(instrStr)
 
     def processCommands(self):
         for com in self.commands:
-            instrSet = com.generateCode(self)
-            for instr in instrSet:
-                self.instructions.append(instr)
+            com.generateCode(self)
 
     def generateCode(self):
         return '\n'.join(self.instructions + ["HALT"])

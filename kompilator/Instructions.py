@@ -16,98 +16,130 @@
 from Register import REG
 
 
+class Future:
+    def materialize(self):
+        raise Exception("Materialize not defined for %s" % self.__class__)
+
+    def __str__(self):
+        return self.materialize()
+
+
+class FutureJZERO(Future):
+    def __init__(self, X, j):
+        self.X = X
+        self.j = j
+
+    def materialize(self):
+        return "%s %s %s" % ('JZERO', self.X, self.j)
+
+
 def GET(p, reg):
-    return [p.makeInstr('GET', reg)]
+    p.makeInstr('GET', reg)
 
 
 def STORE(p, reg):
-    return [p.makeInstr('STORE', reg)]
+    p.makeInstr('STORE', reg)
 
 
 def LOAD(p, reg):
-    return [p.makeInstr('LOAD', reg)]
+    p.makeInstr('LOAD', reg)
 
 
 def INC(p, reg):
-    return [p.makeInstr('INC', reg)]
+    p.makeInstr('INC', reg)
 
 
-def JUMP(p, k):
-    return [p.makeInstr('JUMP', k)]
+def JUMP(p, j):
+    p.makeInstr('JUMP', j)
 
 
 def SUB(p, X, Y):
-    return [p.makeInstr('SUB', X, Y)]
+    p.makeInstr('SUB', X, Y)
+
+
+# def JZERO(p, X, j):
+#     p.makeInstr('JZERO', X, j)
 
 
 def ADD(p, X, Y):
-    return [p.makeInstr('ADD', X, Y)]
+    p.makeInstr('ADD', X, Y)
 
 
 def clearRegister(p, reg):
-    return SUB(p, reg, reg)
+    SUB(p, reg, reg)
 
 
 def READ(p, identifier):
     memoryId = identifier.memoryId
-    instructions = []
-    instructions += GET(p, REG.B)
-    instructions += setRegisterConst(p, REG.A, memoryId)
-    instructions += STORE(p, REG.B)
-    return instructions
+    GET(p, REG.B)
+    setRegisterConst(p, REG.A, memoryId)
+    STORE(p, REG.B)
 
 
 def WRITE(p, value):
-    instructions = []
-    instructions += value.evalToRegInstr(p, REG.B)
-    instructions += [p.makeInstr('PUT', REG.B)]
-    return instructions
+    value.evalToRegInstr(p, REG.B)
+    p.makeInstr('PUT', REG.B)
 
 # REGISTERS
 # A - memory ID
-# B - ACCUMULATOR
-# C - right binary operator value
+# B - ACCUMULATOR / left operand
+# C - right operand
+# D
+# E
+# F
+# G - CONDITION ACC / left cond operand
+# H - right cond operand
 
 
 def setRegisterConst(p, reg, val):
-    instructions = []
-    instructions += clearRegister(p, reg)
+    clearRegister(p, reg)
     while val > 0:
-        instructions += INC(p, reg)
+        INC(p, reg)
         val -= 1
-    return instructions
 
 
 def ASSIGN(p, identifier, expression):
     memoryId = identifier.memoryId
-    instructions = []
-    instructions += expression.evalToRegInstr(p, REG.B)
-    instructions += setRegisterConst(p, REG.A, memoryId)
-    instructions += STORE(p, REG.B)
-    return instructions
-
+    expression.evalToRegInstr(p, REG.B)
+    setRegisterConst(p, REG.A, memoryId)
+    STORE(p, REG.B)
+    
 
 def LOAD_MEM_TO_REG(p, memoryId, reg):
-    instructions = []
-    instructions += setRegisterConst(p, REG.A, memoryId)
-    instructions += LOAD(p, reg)
-    return instructions
+    setRegisterConst(p, REG.A, memoryId)
+    LOAD(p, reg)
 
 
 def LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, identifier, reg):
     memoryId = identifier.memoryId
-    return LOAD_MEM_TO_REG(p, memoryId, reg)
+    LOAD_MEM_TO_REG(p, memoryId, reg)
 
 
 def LOAD_NUMBER_VALUE_TO_REGISTER(p, number, reg):
-    return setRegisterConst(p, reg, number)
+    setRegisterConst(p, reg, number)
 
 
 def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
-    instructions = []
     if destReg == helpReg:
         raise Exception("Cannot use same registers")
-    instructions += leftValue.evalToRegInstr(p, destReg)
-    instructions += rightValue.evalToRegInstr(p, helpReg)
-    instructions += ADD(p, destReg, helpReg)
-    return instructions
+    leftValue.evalToRegInstr(p, destReg)
+    rightValue.evalToRegInstr(p, helpReg)
+    ADD(p, destReg, helpReg)
+
+
+def CONDITION_GT(p, leftVal, rightVal, trueBlock, falseBlock):
+    leftVal.evalToRegInstr(p, REG.G)
+    rightVal.evalToRegInstr(p, REG.H)
+    SUB(p, REG.G, REG.H)    # rG = max{rG - rH, 0}
+
+
+def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
+    cond.generateCode(p)
+
+    thenBlockCtr = p.getCounter()
+    for com in thenCommands:
+        com.generateCode(p)
+
+    elseBlockCtr = p.getCounter()
+    for com in elseCommands:
+        com.generateCode(p)
