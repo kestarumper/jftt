@@ -76,6 +76,10 @@ def ADD(p, X, Y):
     p.makeInstr('ADD', X, Y)
 
 
+def COPY(p, X, Y):
+    p.makeInstr('COPY', X, Y)
+
+
 def clearRegister(p, reg):
     SUB(p, reg, reg)
 
@@ -95,7 +99,7 @@ def WRITE(p, value):
 # A - memory ID
 # B - ACCUMULATOR / left operand
 # C - right operand
-# D
+# D - TEMP_COPY
 # E
 # F
 # G
@@ -138,32 +142,43 @@ def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     ADD(p, destReg, helpReg)
 
 
-def CONDITION_GT(p, leftVal, rightVal):
-    leftVal.evalToRegInstr(p, REG.B)
-    rightVal.evalToRegInstr(p, REG.C)
-    clearRegister(p, REG.H)
-    SUB(p, REG.B, REG.C)    # rB = max{leftVal - rightVal, 0}
-    fjzero = FutureJZERO(p, REG.B)
-    INC(p, REG.H)
-    trueLabel = p.getCounter()
-    fjzero.materialize(trueLabel)
-
 def CONDITION_LT(p, leftVal, rightVal):
-    CONDITION_GT(p, rightVal, leftVal)
+    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    rightVal.evalToRegInstr(p, REG.C)       # rC = right
+    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
+                                            # rH == 0 = TRUE (left < right)
+                                            # rH != 0 = FALSE (left >= right)
 
+def CONDITION_GT(p, leftVal, rightVal):
+    CONDITION_LT(p, rightVal, leftVal)
+
+
+def CONDITION_EQ(p, leftVal, rightVal):
+    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    rightVal.evalToRegInstr(p, REG.C)       # rC = right
+    COPY(p, REG.B, REG.H)                   # rB = rH
+    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
+    SUB(p, REG.C, REG.B)                    # rC = max{rC - rB, 0}
+    ADD(p, REG.H, REG.C)                    # rH = rH + rC
+                                            # 0 + 0 == TRUE (H == 0)
+                                            # 1 + 0 v 0 + 1 == FALSE (H != 0)
 
 def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     cond.generateCode(p)
 
     fjzero = FutureJZERO(p, REG.H)
-    for com in thenCommands:
-        com.generateCode(p)
-
-    fjump = FutureJUMP(p)
-    elseBlockStartLabel = p.getCounter()
+    # ELSE BLOCK
     for com in elseCommands:
         com.generateCode(p)
-    elseBLockEndLabel = p.getCounter()
+    fjump = FutureJUMP(p)
+    # ELSE END BLOCK
 
-    fjzero.materialize(elseBlockStartLabel)
-    fjump.materialize(elseBLockEndLabel)
+    # THEN BLOCK
+    thenBlockStartLabel = p.getCounter()
+    for com in thenCommands:
+        com.generateCode(p)
+    thenBLockEndLabel = p.getCounter()
+    # THEN END BLOCK
+
+    fjzero.materialize(thenBlockStartLabel)
+    fjump.materialize(thenBLockEndLabel)
