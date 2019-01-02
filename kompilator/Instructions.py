@@ -100,7 +100,7 @@ def WRITE(p, value):
 # A - memory ID
 # B - ACCUMULATOR / left operand
 # C - right operand
-# D
+# D - Temp
 # E
 # F
 # G
@@ -149,6 +149,27 @@ def MINUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     leftValue.evalToRegInstr(p, destReg)
     rightValue.evalToRegInstr(p, helpReg)
     SUB(p, destReg, helpReg)
+
+
+def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
+    print(leftValue)
+    print(rightValue)
+    leftValue.evalToRegInstr(p, destReg)
+    rightValue.evalToRegInstr(p, helpReg)
+    COPY(p, REG.D, destReg)
+
+    DEC(p, helpReg)
+    LABEL_BEGIN_MULTIPLICATION = p.getCounter()
+    fJUMP_IF_COMPLETE = FutureJZERO(p, helpReg)
+
+    ADD(p, destReg, REG.D)
+    DEC(p, helpReg)
+
+    fJUMP_LOOP = FutureJUMP(p)
+    LABEL_END_MULTIPLICATION = p.getCounter()
+
+    fJUMP_IF_COMPLETE.materialize(LABEL_END_MULTIPLICATION)
+    fJUMP_LOOP.materialize(LABEL_BEGIN_MULTIPLICATION)
 
 
 def CONDITION_LT(p, leftVal, rightVal):

@@ -39,5 +39,7 @@ class BinaryOperator(Expression):
             return Instructions.PLUS(p, self.left, self.right, reg)
         if self.operator == '-':
             return Instructions.MINUS(p, self.left, self.right, reg)
+        if self.operator == '*':
+            return Instructions.TIMES(p, self.left, self.right, reg)
         else:
             raise Exception("Operator '%s' not defined" % self.operator)

@@ -1,15 +1,6 @@
 import Instructions
 
 class Condition:
-    operation = {
-        "EQ": lambda l, r: (l, r),
-        "NEQ": lambda l, r: (l, r),
-        "LT": lambda l, r: (l, r),
-        "GT": lambda l, r: (l, r),
-        "LEQ": lambda l, r: (l, r),
-        "GEQ": lambda l, r: (l, r),
-    }
-
     def __init__(self, left, operator, right):
         self.left = left
         self.operator = operator

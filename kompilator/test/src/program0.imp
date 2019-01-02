@@ -4,9 +4,10 @@ IN
     READ a;
     READ b;
     c := 0;
-    WHILE a != b DO
-        c := c + 1;
+    WHILE c < b DO
+        c := 1 + c;
+        a := a * 2;
         WRITE a;
-        a := a + 1;
     ENDWHILE
+    WRITE c;
 END
