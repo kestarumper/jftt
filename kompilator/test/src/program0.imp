@@ -3,9 +3,9 @@ DECLARE
 IN
     READ a;
     READ b;
-    IF a>b THEN 
-        WRITE a;
+    IF a<b THEN 
+        WRITE 1;
     ELSE 
-        WRITE b;
+        WRITE 2;
     ENDIF
 END

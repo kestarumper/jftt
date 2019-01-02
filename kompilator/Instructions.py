@@ -148,6 +148,9 @@ def CONDITION_GT(p, leftVal, rightVal):
     trueLabel = p.getCounter()
     fjzero.materialize(trueLabel)
 
+def CONDITION_LT(p, leftVal, rightVal):
+    CONDITION_GT(p, rightVal, leftVal)
+
 
 def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     cond.generateCode(p)
