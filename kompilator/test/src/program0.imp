@@ -3,9 +3,9 @@ DECLARE
 IN
     READ a;
     READ b;
-    c := 0;
-    WHILE c < b DO
-        c := c + 1;
+    c := 10;
+    WHILE c > b DO
+        c := c - 1;
         a := a + a;
     ENDWHILE
     WRITE c;

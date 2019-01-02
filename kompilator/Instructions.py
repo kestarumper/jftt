@@ -142,6 +142,14 @@ def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     ADD(p, destReg, helpReg)
 
 
+def MINUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
+    if destReg == helpReg:
+        raise Exception("Cannot use same registers")
+    leftValue.evalToRegInstr(p, destReg)
+    rightValue.evalToRegInstr(p, helpReg)
+    SUB(p, destReg, helpReg)
+
+
 def CONDITION_LT(p, leftVal, rightVal):
     leftVal.evalToRegInstr(p, REG.H)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
