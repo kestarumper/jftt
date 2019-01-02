@@ -19,6 +19,13 @@ class Program:
     def listDeclarationsMemory(self):
         print([(decl.pidentifier, decl.memoryId) for decl in self.declarations])
 
+
+    def addFutureInstr(self, future):
+        self.incCounter()
+        self.instructions.append(future)
+        return self.counter - 1
+
+
     def makeInstr(self, instr, X, Y=""):
         instrStr = "%s %s %s" % (instr, X, Y)
         self.incCounter()

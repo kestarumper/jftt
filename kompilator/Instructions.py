@@ -17,20 +17,27 @@ from Register import REG
 
 
 class Future:
-    def materialize(self):
+    def materialize(self, j):
         raise Exception("Materialize not defined for %s" % self.__class__)
-
-    def __str__(self):
-        return self.materialize()
 
 
 class FutureJZERO(Future):
-    def __init__(self, X, j):
+    def __init__(self, program, X):
         self.X = X
-        self.j = j
+        self.program = program
+        self.instrId = program.addFutureInstr(self)
 
-    def materialize(self):
-        return "%s %s %s" % ('JZERO', self.X, self.j)
+    def materialize(self, j):
+        self.program.instructions[self.instrId] = "%s %s %s" % ('JZERO', self.X, j)
+
+
+class FutureJUMP(Future):
+    def __init__(self, program):
+        self.program = program
+        self.instrId = program.addFutureInstr(self)
+
+    def materialize(self, j):
+        self.program.instructions[self.instrId] = "%s %s" % ('JUMP', j)
 
 
 def GET(p, reg):
@@ -53,12 +60,16 @@ def JUMP(p, j):
     p.makeInstr('JUMP', j)
 
 
+def DEC(p, X):
+    p.makeInstr('DEC', X)
+
+
 def SUB(p, X, Y):
     p.makeInstr('SUB', X, Y)
 
 
-# def JZERO(p, X, j):
-#     p.makeInstr('JZERO', X, j)
+def JZERO(p, X, j):
+    p.makeInstr('JZERO', X, j)
 
 
 def ADD(p, X, Y):
@@ -87,8 +98,8 @@ def WRITE(p, value):
 # D
 # E
 # F
-# G - CONDITION ACC / left cond operand
-# H - right cond operand
+# G
+# H - CONDITION RESULT
 
 
 def setRegisterConst(p, reg, val):
@@ -103,7 +114,7 @@ def ASSIGN(p, identifier, expression):
     expression.evalToRegInstr(p, REG.B)
     setRegisterConst(p, REG.A, memoryId)
     STORE(p, REG.B)
-    
+
 
 def LOAD_MEM_TO_REG(p, memoryId, reg):
     setRegisterConst(p, REG.A, memoryId)
@@ -127,19 +138,29 @@ def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     ADD(p, destReg, helpReg)
 
 
-def CONDITION_GT(p, leftVal, rightVal, trueBlock, falseBlock):
-    leftVal.evalToRegInstr(p, REG.G)
-    rightVal.evalToRegInstr(p, REG.H)
-    SUB(p, REG.G, REG.H)    # rG = max{rG - rH, 0}
+def CONDITION_GT(p, leftVal, rightVal):
+    leftVal.evalToRegInstr(p, REG.B)
+    rightVal.evalToRegInstr(p, REG.C)
+    clearRegister(p, REG.H)
+    SUB(p, REG.B, REG.C)    # rB = max{leftVal - rightVal, 0}
+    fjzero = FutureJZERO(p, REG.B)
+    INC(p, REG.H)
+    trueLabel = p.getCounter()
+    fjzero.materialize(trueLabel)
 
 
 def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     cond.generateCode(p)
 
-    thenBlockCtr = p.getCounter()
+    fjzero = FutureJZERO(p, REG.H)
     for com in thenCommands:
         com.generateCode(p)
 
-    elseBlockCtr = p.getCounter()
+    fjump = FutureJUMP(p)
+    elseBlockStartLabel = p.getCounter()
     for com in elseCommands:
         com.generateCode(p)
+    elseBLockEndLabel = p.getCounter()
+
+    fjzero.materialize(elseBlockStartLabel)
+    fjump.materialize(elseBLockEndLabel)
