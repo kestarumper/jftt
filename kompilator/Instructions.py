@@ -152,12 +152,18 @@ def MINUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
 
 
 def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
-    print(leftValue)
-    print(rightValue)
     leftValue.evalToRegInstr(p, destReg)
     rightValue.evalToRegInstr(p, helpReg)
-    COPY(p, REG.D, destReg)
 
+    COPY(p, REG.D, helpReg)
+    SUB(p, REG.D, destReg)
+    fJUMP_SWAP = FutureJZERO(p, REG.D)
+    COPY(p, REG.D, destReg)
+    COPY(p, destReg, helpReg)
+    COPY(p, helpReg, REG.D)
+    LABEL_AFTER_SWAP = p.getCounter()
+
+    COPY(p, REG.D, destReg)
     DEC(p, helpReg)
     LABEL_BEGIN_MULTIPLICATION = p.getCounter()
     fJUMP_IF_COMPLETE = FutureJZERO(p, helpReg)
@@ -168,6 +174,7 @@ def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     fJUMP_LOOP = FutureJUMP(p)
     LABEL_END_MULTIPLICATION = p.getCounter()
 
+    fJUMP_SWAP.materialize(LABEL_AFTER_SWAP)
     fJUMP_IF_COMPLETE.materialize(LABEL_END_MULTIPLICATION)
     fJUMP_LOOP.materialize(LABEL_BEGIN_MULTIPLICATION)
 
