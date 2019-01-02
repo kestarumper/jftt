@@ -105,7 +105,7 @@ def p_command_WRITE(p):
 
 def p_expression_value(p):
     '''expression   : value'''
-    p[0] = Expression(p[1])
+    p[0] = p[1]
 
 
 def p_expression(p):

@@ -1,5 +1,6 @@
 import Instructions
 
+
 class Command:
     def __init__(self):
         pass
@@ -17,6 +18,7 @@ class CommandAssign(Command):
     def generateCode(self, p):
         return Instructions.ASSIGN(p, self.identifier, self.expression)
 
+
 class CommandIfThen(Command):
     def __init__(self, condition, thenCommands):
         super(CommandIfThen, self).__init__()
@@ -30,7 +32,9 @@ class CommandIfThenElse(CommandIfThen):
         self.elseCommands = elseCommands
 
     def generateCode(self, p):
-        Instructions.IF_THEN_ELSE(p, self.condition, self.thenCommands, self.elseCommands)
+        Instructions.IF_THEN_ELSE(
+            p, self.condition, self.thenCommands, self.elseCommands)
+
 
 class CommandWhile(Command):
     def __init__(self, condition, commands):
@@ -39,10 +43,8 @@ class CommandWhile(Command):
         self.commands = commands
 
     def generateCode(self, p):
-        beforeCtr = p.getCounter()
-        for com in self.commands:
-            com.generateCode(p)
-        afterCtr = p.getCounter()
+        return Instructions.WHILE(p, self.condition, self.commands)
+
 
 class CommandDoWhile(Command):
     def __init__(self, commands, condition):

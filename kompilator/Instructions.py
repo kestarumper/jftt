@@ -99,7 +99,7 @@ def WRITE(p, value):
 # A - memory ID
 # B - ACCUMULATOR / left operand
 # C - right operand
-# D - TEMP_COPY
+# D
 # E
 # F
 # G
@@ -145,12 +145,13 @@ def PLUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
 def CONDITION_LT(p, leftVal, rightVal):
     leftVal.evalToRegInstr(p, REG.H)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
+    INC(p, REG.H)
     SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
                                             # rH == 0 = TRUE (left < right)
                                             # rH != 0 = FALSE (left >= right)
 
 def CONDITION_GT(p, leftVal, rightVal):
-    CONDITION_LT(p, rightVal, leftVal)
+    CONDITION_LT(p, rightVal, leftVal)      # inverted less than
 
 
 def CONDITION_EQ(p, leftVal, rightVal):
@@ -182,3 +183,19 @@ def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
 
     fjzero.materialize(thenBlockStartLabel)
     fjump.materialize(thenBLockEndLabel)
+
+
+def WHILE(p, cond, commands):
+    LABEL_WHILE_CONDITION = p.getCounter()
+    cond.generateCode(p)                        # CONDITION
+    fJumpIntoWhile = FutureJZERO(p, REG.H)      # ENTER WHILE IF TRUE
+    fJumpOutOfWhile = FutureJUMP(p)             # LEAVE WHILE IF FALSE
+    LABEL_WHILE_INSIDE = p.getCounter()
+    for com in commands:
+        com.generateCode(p)                     # COMMANDS
+    fJumpLoop = FutureJUMP(p)                   # BACK TO CONDITION CHECK
+    LABEL_WHILE_END = p.getCounter()            # ENDWHILE
+
+    fJumpIntoWhile.materialize(LABEL_WHILE_INSIDE)
+    fJumpOutOfWhile.materialize(LABEL_WHILE_END)
+    fJumpLoop.materialize(LABEL_WHILE_CONDITION)
