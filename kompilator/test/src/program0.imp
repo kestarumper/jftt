@@ -3,11 +3,10 @@ DECLARE
 IN
     READ a;
     READ b;
-    c := 10;
-    WHILE c > b DO
-        c := c - 1;
-        a := a + a;
+    c := 0;
+    WHILE a != b DO
+        c := c + 1;
+        WRITE a;
+        a := a + 1;
     ENDWHILE
-    WRITE c;
-    WRITE a;
 END

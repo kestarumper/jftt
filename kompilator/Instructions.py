@@ -28,7 +28,8 @@ class FutureJZERO(Future):
         self.instrId = program.addFutureInstr(self)
 
     def materialize(self, j):
-        self.program.instructions[self.instrId] = "%s %s %s" % ('JZERO', self.X, j)
+        self.program.instructions[self.instrId] = "%s %s %s" % (
+            'JZERO', self.X, j)
 
 
 class FutureJUMP(Future):
@@ -158,8 +159,21 @@ def CONDITION_LT(p, leftVal, rightVal):
                                             # rH == 0 = TRUE (left < right)
                                             # rH != 0 = FALSE (left >= right)
 
+
+def CONDITION_LEQ(p, leftVal, rightVal):
+    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    rightVal.evalToRegInstr(p, REG.C)       # rC = right
+    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
+                                            # rH == 0 = TRUE (left <= right)
+                                            # rH != 0 = FALSE (left > right)
+
+
 def CONDITION_GT(p, leftVal, rightVal):
     CONDITION_LT(p, rightVal, leftVal)      # inverted less than
+
+
+def CONDITION_GEQ(p, leftVal, rightVal):
+    CONDITION_LEQ(p, rightVal, leftVal)     # inverted less or equal
 
 
 def CONDITION_EQ(p, leftVal, rightVal):
@@ -171,6 +185,22 @@ def CONDITION_EQ(p, leftVal, rightVal):
     ADD(p, REG.H, REG.C)                    # rH = rH + rC
                                             # 0 + 0 == TRUE (H == 0)
                                             # 1 + 0 v 0 + 1 == FALSE (H != 0)
+
+
+def CONDITION_NEQ(p, leftVal, rightVal):
+    CONDITION_EQ(p, leftVal, rightVal)
+    fJUMP_IF_EQUAL = FutureJZERO(p, REG.H)
+    clearRegister(p, REG.H)         # if H != 0 ==> H = TRUE
+    fJUMP_SKIP = FutureJUMP(p)
+
+    LABEL_EQUAL = p.getCounter()
+    INC(p, REG.H)                   # if H == 0 ==> H = FALSE
+
+    LABEL_NOT_EQUAL = p.getCounter()
+
+    fJUMP_IF_EQUAL.materialize(LABEL_EQUAL)
+    fJUMP_SKIP.materialize(LABEL_NOT_EQUAL)
+
 
 def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     cond.generateCode(p)
@@ -199,8 +229,8 @@ def WHILE(p, cond, commands):
     fJumpIntoWhile = FutureJZERO(p, REG.H)      # ENTER WHILE IF TRUE
     fJumpOutOfWhile = FutureJUMP(p)             # LEAVE WHILE IF FALSE
     LABEL_WHILE_INSIDE = p.getCounter()
-    for com in commands:
-        com.generateCode(p)                     # COMMANDS
+    for com in commands:                        # WHILE BODY COMMANDS
+        com.generateCode(p)
     fJumpLoop = FutureJUMP(p)                   # BACK TO CONDITION CHECK
     LABEL_WHILE_END = p.getCounter()            # ENDWHILE
 

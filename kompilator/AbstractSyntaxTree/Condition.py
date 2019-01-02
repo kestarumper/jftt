@@ -22,5 +22,7 @@ class Condition:
             return Instructions.CONDITION_LT(p, self.left, self.right)
         if self.operator == '=':
             return Instructions.CONDITION_EQ(p, self.left, self.right)
+        if self.operator == '!=':
+            return Instructions.CONDITION_NEQ(p, self.left, self.right)
         else:
             raise Exception("Undefined CONDITION operator '%s'" % self.operator)
