@@ -65,6 +65,10 @@ def DEC(p, X):
     p.makeInstr('DEC', X)
 
 
+def HALF(p, X):
+    p.makeInstr('HALF', X)
+
+
 def SUB(p, X, Y):
     p.makeInstr('SUB', X, Y)
 
@@ -177,6 +181,47 @@ def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     fJUMP_SWAP.materialize(LABEL_AFTER_SWAP)
     fJUMP_IF_COMPLETE.materialize(LABEL_END_MULTIPLICATION)
     fJUMP_LOOP.materialize(LABEL_BEGIN_MULTIPLICATION)
+
+
+def BITS(p, value, reg=REG.A):
+    clearRegister(p, reg)
+    value.evalToRegInstr(p, REG.B)
+
+    LABEL_CONDITION = p.getCounter()
+    fjzero = FutureJZERO(p, REG.B)
+
+    INC(p, reg)
+    HALF(p, REG.B)
+
+    fjump = FutureJUMP(p)    
+    LABEL_END = p.getCounter()
+
+    fjzero.materialize(LABEL_END)
+    fjump.materialize(LABEL_CONDITION)
+    
+
+def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C):
+    # A - N number of bits of numerator
+    # B - quotient (iloraz)
+    # C - remainder (reszta)
+    # D - numerator (licznik)
+    # E - denominator (mianownik)
+    # F - i iterator from n...0
+    REG_NUMERATOR = REG.D
+    REG_DENOMINATOR = REG.E
+
+    if REG_QUOTIENT in [REG_NUMERATOR, REG_DENOMINATOR, REG_REMAINDER]:
+        raise Exception("Register use collision: '%s'" % REG_QUOTIENT)
+    if REG_REMAINDER in [REG_NUMERATOR, REG_DENOMINATOR, REG_QUOTIENT]:
+        raise Exception("Register use collision: '%s'" % REG_REMAINDER)
+
+    BITS(p, numeratorVal, REG.A)
+
+    clearRegister(p, REG_QUOTIENT)
+    clearRegister(p, REG_REMAINDER)
+    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)
+    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)
+    
 
 
 def CONDITION_LT(p, leftVal, rightVal):
