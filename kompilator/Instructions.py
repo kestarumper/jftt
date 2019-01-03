@@ -205,10 +205,14 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     REG_BITS = REG.A
     REG_TEMP = REG.D
     REG_TEMP2 = REG.H
+
+    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
+    fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_DENOMINATOR)
+    
+    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
     clearRegister(p, REG_QUOTIENT)                      # Q = 0
     clearRegister(p, REG_REMAINDER)                     # R = 0
-    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
-    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
+
 
     # BEGIN CALC BITS
     # calculate number of bits of numerator: n
@@ -272,6 +276,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fJUMP_FOR_BEGIN = FutureJUMP(p)
     LABEL_FOR_END = p.getCounter()
 
+    fJUMP_DIVISION_BY_ZERO.materialize(LABEL_FOR_END)
     fJUMP_FOR_END.materialize(LABEL_FOR_END)
     fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
     # ENDFOR    

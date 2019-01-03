@@ -3,6 +3,6 @@ DECLARE
 IN
     READ a;
     READ b;
-    c := a / b;
+    c := a % b;
     WRITE c;
 END
