@@ -196,7 +196,10 @@ def SHIFT_LEFT(p, reg):
 # F - Temp
 # G
 # H - CONDITION RESULT
-def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C):
+def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C, modulo=False):
+    if modulo:
+        REG_QUOTIENT, REG_REMAINDER = REG_REMAINDER, REG_QUOTIENT 
+
     REG_NUMERATOR = REG.E
     REG_DENOMINATOR = REG.F
     REG_BITS = REG.A
@@ -272,6 +275,10 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fJUMP_FOR_END.materialize(LABEL_FOR_END)
     fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
     # ENDFOR    
+
+
+def MODULO(p, value, mod, destReg):
+    DIVIDE(p, value, mod, destReg, REG.C, modulo=True)
 
 
 def CONDITION_LT(p, leftVal, rightVal):

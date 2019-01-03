@@ -43,5 +43,7 @@ class BinaryOperator(Expression):
             return Instructions.TIMES(p, self.left, self.right, reg)
         if self.operator == '/':
             return Instructions.DIVIDE(p, self.left, self.right, reg)
+        if self.operator == '%':
+            return Instructions.MODULO(p, self.left, self.right, reg)
         else:
             raise Exception("Operator '%s' not defined" % self.operator)
