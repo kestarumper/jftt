@@ -3,10 +3,13 @@ from Memory import manager as MemoryManager
 class Program:
     def __init__(self, declarations, commands):
         self.declarations = declarations
+        self.declaredPidentifiers = set()
         self.commands = commands
         self.instructions = []
         self.counter = 0
-        self.listDeclarationsMemory()
+        MemoryManager.runMemCheck(self.declarations)
+        MemoryManager.assignMemToDeclarations()
+        MemoryManager.listDeclarationsMemory()
         self.processCommands()
 
     def getCounter(self):
@@ -16,15 +19,10 @@ class Program:
         self.counter += 1
         return self
 
-    def listDeclarationsMemory(self):
-        print([(decl.pidentifier, decl.memoryId) for decl in self.declarations])
-
-
     def addFutureInstr(self, future):
         self.incCounter()
         self.instructions.append(future)
         return self.counter - 1
-
 
     def makeInstr(self, instr, X, Y=""):
         instrStr = "%s %s %s" % (instr, X, Y)

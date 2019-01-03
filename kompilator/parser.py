@@ -8,12 +8,6 @@ from AbstractSyntaxTree.Declarations import *
 from Program import Program
 
 
-def DEBUG(obj):
-    print("[DEBUG]")
-    print(repr(obj))
-    print("[DEBUGEND]")
-
-
 def p_program(p):
     '''program      : DECLARE declarations IN commands END'''
     p[0] = Program(p[2], p[4])

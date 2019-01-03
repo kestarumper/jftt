@@ -1,6 +1,7 @@
 from Memory import manager as MemoryManager
 import Instructions
 
+
 class Expression:
     def evalToRegInstr(self, p, reg):
         raise Exception("evalToRegInstr() not defined for %s" % self.__class__)
@@ -21,11 +22,15 @@ class ValueFromIdentifier(Expression):
     def evalToRegInstr(self, p, reg):
         return Instructions.LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, self.identifier, reg)
 
-    
+
 class Identifier:
     def __init__(self, pidentifier):
         self.pidentifier = pidentifier
-        self.memoryId = MemoryManager.assignMem(self)
+        MemoryManager.registerSymbol(pidentifier)
+
+    @property
+    def memoryId(self):
+        return MemoryManager.getBlockId(self.pidentifier)
 
 
 class BinaryOperator(Expression):
