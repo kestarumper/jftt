@@ -155,32 +155,43 @@ def MINUS(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     SUB(p, destReg, helpReg)
 
 
-def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
-    leftValue.evalToRegInstr(p, destReg)
-    rightValue.evalToRegInstr(p, helpReg)
+def TIMES(p, leftValue, rightValue, destReg=REG.B, leftReg=REG.C, rightReg=REG.D):
+    leftValue.evalToRegInstr(p, leftReg)
+    rightValue.evalToRegInstr(p, rightReg)
 
-    COPY(p, REG.D, helpReg)
-    SUB(p, REG.D, destReg)
-    fJUMP_SWAP = FutureJZERO(p, REG.D)
-    COPY(p, REG.D, destReg)
-    COPY(p, destReg, helpReg)
-    COPY(p, helpReg, REG.D)
+    # SWAP TO LEFT REGISTER BIGGER NUMBER
+    COPY(p, destReg, rightReg)
+    SUB(p, destReg, leftReg)
+    fJUMP_SWAP = FutureJZERO(p, destReg)
+    COPY(p, destReg, leftReg)
+    COPY(p, leftReg, rightReg)
+    COPY(p, rightReg, destReg)
     LABEL_AFTER_SWAP = p.getCounter()
-
-    COPY(p, REG.D, destReg)
-    DEC(p, helpReg)
-    LABEL_BEGIN_MULTIPLICATION = p.getCounter()
-    fJUMP_IF_COMPLETE = FutureJZERO(p, helpReg)
-
-    ADD(p, destReg, REG.D)
-    DEC(p, helpReg)
-
-    fJUMP_LOOP = FutureJUMP(p)
-    LABEL_END_MULTIPLICATION = p.getCounter()
-
     fJUMP_SWAP.materialize(LABEL_AFTER_SWAP)
-    fJUMP_IF_COMPLETE.materialize(LABEL_END_MULTIPLICATION)
-    fJUMP_LOOP.materialize(LABEL_BEGIN_MULTIPLICATION)
+    # END SWAP
+
+    clearRegister(p, destReg)   # RESET c
+
+    LABEL_LOOP = p.getCounter()
+    fJUMP_TO_END = FutureJZERO(p, leftReg)
+    fJUMP_TO_ADD = FutureJODD(p, leftReg)
+    fJUMP_SHIFT = FutureJUMP(p)
+
+    LABEL_ADD = p.getCounter()
+    ADD(p, destReg, rightReg)
+
+    LABEL_SHIFT = p.getCounter()
+    HALF(p, leftReg)
+    SHIFT_LEFT(p, rightReg)
+    fJUMP_TO_LOOP = FutureJUMP(p)
+
+    LABEL_END = p.getCounter()
+
+    fJUMP_TO_END.materialize(LABEL_END)
+    fJUMP_TO_ADD.materialize(LABEL_ADD)
+    fJUMP_SHIFT.materialize(LABEL_SHIFT)
+    fJUMP_TO_LOOP.materialize(LABEL_LOOP)
+
 
 
 def SHIFT_LEFT(p, reg):
