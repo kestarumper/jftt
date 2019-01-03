@@ -205,8 +205,6 @@ def SHIFT_LEFT(p, reg):
 # D - Temp
 # E - Temp
 # F - Temp
-# G
-# H - CONDITION RESULT
 def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C, modulo=False):
     if modulo:
         REG_QUOTIENT, REG_REMAINDER = REG_REMAINDER, REG_QUOTIENT 
@@ -298,18 +296,18 @@ def MODULO(p, value, mod, destReg):
 
 
 def CONDITION_LT(p, leftVal, rightVal):
-    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    leftVal.evalToRegInstr(p, REG.B)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
-    INC(p, REG.H)
-    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
+    INC(p, REG.B)
+    SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
                                             # rH == 0 = TRUE (left < right)
                                             # rH != 0 = FALSE (left >= right)
 
 
 def CONDITION_LEQ(p, leftVal, rightVal):
-    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    leftVal.evalToRegInstr(p, REG.B)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
-    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
+    SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
                                             # rH == 0 = TRUE (left <= right)
                                             # rH != 0 = FALSE (left > right)
 
@@ -323,24 +321,24 @@ def CONDITION_GEQ(p, leftVal, rightVal):
 
 
 def CONDITION_EQ(p, leftVal, rightVal):
-    leftVal.evalToRegInstr(p, REG.H)        # rH = left
+    leftVal.evalToRegInstr(p, REG.B)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
-    COPY(p, REG.B, REG.H)                   # rB = rH
-    SUB(p, REG.H, REG.C)                    # rH = max{rH - rC, 0}
-    SUB(p, REG.C, REG.B)                    # rC = max{rC - rB, 0}
-    ADD(p, REG.H, REG.C)                    # rH = rH + rC
+    COPY(p, REG.D, REG.B)                   # rB = rH
+    SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
+    SUB(p, REG.C, REG.D)                    # rC = max{rC - rB, 0}
+    ADD(p, REG.B, REG.C)                    # rH = rH + rC
                                             # 0 + 0 == TRUE (H == 0)
                                             # 1 + 0 v 0 + 1 == FALSE (H != 0)
 
 
 def CONDITION_NEQ(p, leftVal, rightVal):
     CONDITION_EQ(p, leftVal, rightVal)
-    fJUMP_IF_EQUAL = FutureJZERO(p, REG.H)
-    clearRegister(p, REG.H)         # if H != 0 ==> H = TRUE
+    fJUMP_IF_EQUAL = FutureJZERO(p, REG.B)
+    clearRegister(p, REG.B)         # if H != 0 ==> H = TRUE
     fJUMP_SKIP = FutureJUMP(p)
 
     LABEL_EQUAL = p.getCounter()
-    INC(p, REG.H)                   # if H == 0 ==> H = FALSE
+    INC(p, REG.B)                   # if H == 0 ==> H = FALSE
 
     LABEL_NOT_EQUAL = p.getCounter()
 
@@ -351,7 +349,7 @@ def CONDITION_NEQ(p, leftVal, rightVal):
 def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     cond.generateCode(p)
 
-    fjzero = FutureJZERO(p, REG.H)
+    fjzero = FutureJZERO(p, REG.B)
     # ELSE BLOCK
     for com in elseCommands:
         com.generateCode(p)
@@ -372,7 +370,7 @@ def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
 def WHILE(p, cond, commands):
     LABEL_WHILE_CONDITION = p.getCounter()
     cond.generateCode(p)                        # CONDITION
-    fJumpIntoWhile = FutureJZERO(p, REG.H)      # ENTER WHILE IF TRUE
+    fJumpIntoWhile = FutureJZERO(p, REG.B)      # ENTER WHILE IF TRUE
     fJumpOutOfWhile = FutureJUMP(p)             # LEAVE WHILE IF FALSE
     LABEL_WHILE_INSIDE = p.getCounter()
     for com in commands:                        # WHILE BODY COMMANDS
