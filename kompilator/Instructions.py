@@ -31,6 +31,16 @@ class FutureJZERO(Future):
         self.program.instructions[self.instrId] = "%s %s %s" % (
             'JZERO', self.X, j)
 
+class FutureJODD(Future):
+    def __init__(self, program, X):
+        self.X = X
+        self.program = program
+        self.instrId = program.addFutureInstr(self)
+
+    def materialize(self, j):
+        self.program.instructions[self.instrId] = "%s %s %s" % (
+            'JODD', self.X, j)
+
 
 class FutureJUMP(Future):
     def __init__(self, program):
@@ -191,6 +201,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     REG_DENOMINATOR = REG.F
     REG_BITS = REG.A
     REG_TEMP = REG.D
+    REG_TEMP2 = REG.H
     clearRegister(p, REG_QUOTIENT)                      # Q = 0
     clearRegister(p, REG_REMAINDER)                     # R = 0
     numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
@@ -200,21 +211,60 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     # calculate number of bits of numerator: n
     clearRegister(p, REG_BITS)
     COPY(p, REG_TEMP, REG_NUMERATOR)
-    LABEL_CONDITION = p.getCounter()
+    LABEL_CALC_BITS_BEGIN = p.getCounter()
     fjzero = FutureJZERO(p, REG_TEMP)
     INC(p, REG_BITS)
     HALF(p, REG_TEMP)
     fjump = FutureJUMP(p)    
-    LABEL_END = p.getCounter()
-    fjzero.materialize(LABEL_END)
-    fjump.materialize(LABEL_CONDITION)
+    LABEL_CALC_BITS_END = p.getCounter()
+    fjzero.materialize(LABEL_CALC_BITS_END)
+    fjump.materialize(LABEL_CALC_BITS_BEGIN)
     # END CALC BITS
 
     # FOR i = n - 1 .. 0 do
-    SHIFT_LEFT(p, REG_REMAINDER)                # R = R << 1
+    LABEL_FOR_BEGIN = p.getCounter()
+    fJUMP_FOR_END = FutureJZERO(p, REG_BITS)
+    SHIFT_LEFT(p, REG_REMAINDER)                # R := R << 1
     
+    COPY(p, REG_TEMP, REG_NUMERATOR)
+    COPY(p, REG_TEMP2, REG_BITS)
+    #LOOP_SHIFT_RIGHT n - 1 times
+    DEC(p, REG_TEMP2)
+    LABEL_LOOP_ITH_BIT_BEGIN = p.getCounter()
+    fJUMP_LOOP_ITH_BIT_END = FutureJZERO(p, REG_TEMP2)
+    HALF(p, REG_TEMP)
+    DEC(p, REG_TEMP2)
+    fJUMP_LOOP_ITH_BIT_BEGIN = FutureJUMP(p)
+    LABEL_LOOP_ITH_BIT_END = p.getCounter()
 
+    fJUMP_LOOP_ITH_BIT_END.materialize(LABEL_LOOP_ITH_BIT_END)
+    fJUMP_LOOP_ITH_BIT_BEGIN.materialize(LABEL_LOOP_ITH_BIT_BEGIN)
+    #LOOP_SHIFT_RIGHT_END
 
+    p.makeInstr('PUT', REG_TEMP)
+    ADD(p, REG_REMAINDER, REG_TEMP)             # R(0) := N(i)
+    p.makeInstr('PUT', REG_REMAINDER)
+
+    # IF R ≥ D THEN
+        # R := R − D
+        # Q(i) := 1
+    # ENDIF
+    COPY(p, REG_TEMP, REG_REMAINDER)
+    SUB(p, REG_TEMP, REG_DENOMINATOR)
+    fJUMP_IF_R_LESSTHAN_D = FutureJZERO(p, REG_TEMP)
+    SUB(p, REG_REMAINDER, REG_DENOMINATOR)
+    INC(p, REG_QUOTIENT)
+    LABEL_R_LESSTHAN_D = p.getCounter()
+    SHIFT_LEFT(p, REG_QUOTIENT)
+
+    fJUMP_IF_R_LESSTHAN_D.materialize(LABEL_R_LESSTHAN_D)
+
+    DEC(p, REG_BITS)
+    fJUMP_FOR_BEGIN = FutureJUMP(p)
+    LABEL_FOR_END = p.getCounter()
+
+    fJUMP_FOR_END.materialize(LABEL_FOR_END)
+    fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
     # ENDFOR
 
 
