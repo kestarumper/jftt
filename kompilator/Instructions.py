@@ -241,21 +241,27 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fJUMP_LOOP_ITH_BIT_BEGIN.materialize(LABEL_LOOP_ITH_BIT_BEGIN)
     #LOOP_SHIFT_RIGHT_END
 
-    p.makeInstr('PUT', REG_TEMP)
-    ADD(p, REG_REMAINDER, REG_TEMP)             # R(0) := N(i)
-    p.makeInstr('PUT', REG_REMAINDER)
+    fJUMP_IF_ODD = FutureJODD(p, REG_TEMP)    # REG_TEMP == 0 ?
+    fJUMP_IF_EVEN = FutureJUMP(p)
+    LABEL_IS_ODD = p.getCounter()
+    INC(p, REG_REMAINDER)                       # R(0) := N(i)
+    LABEL_IS_EVEN = p.getCounter()
+    fJUMP_IF_ODD.materialize(LABEL_IS_ODD)
+    fJUMP_IF_EVEN.materialize(LABEL_IS_EVEN)
+
 
     # IF R ≥ D THEN
         # R := R − D
         # Q(i) := 1
     # ENDIF
+    SHIFT_LEFT(p, REG_QUOTIENT)
     COPY(p, REG_TEMP, REG_REMAINDER)
-    SUB(p, REG_TEMP, REG_DENOMINATOR)
+    INC(p, REG_TEMP)
+    SUB(p, REG_TEMP, REG_DENOMINATOR)   # R + 1 - D == 0
     fJUMP_IF_R_LESSTHAN_D = FutureJZERO(p, REG_TEMP)
     SUB(p, REG_REMAINDER, REG_DENOMINATOR)
     INC(p, REG_QUOTIENT)
     LABEL_R_LESSTHAN_D = p.getCounter()
-    SHIFT_LEFT(p, REG_QUOTIENT)
 
     fJUMP_IF_R_LESSTHAN_D.materialize(LABEL_R_LESSTHAN_D)
 
@@ -265,10 +271,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
 
     fJUMP_FOR_END.materialize(LABEL_FOR_END)
     fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
-    # ENDFOR
-
-
-    
+    # ENDFOR    
 
 
 def CONDITION_LT(p, leftVal, rightVal):
