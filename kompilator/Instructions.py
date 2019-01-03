@@ -100,16 +100,6 @@ def WRITE(p, value):
     value.evalToRegInstr(p, REG.B)
     p.makeInstr('PUT', REG.B)
 
-# REGISTERS
-# A - memory ID
-# B - ACCUMULATOR / left operand
-# C - right operand
-# D - Temp
-# E
-# F
-# G
-# H - CONDITION RESULT
-
 
 def setRegisterConst(p, reg, val):
     clearRegister(p, reg)
@@ -183,44 +173,51 @@ def TIMES(p, leftValue, rightValue, destReg=REG.B, helpReg=REG.C):
     fJUMP_LOOP.materialize(LABEL_BEGIN_MULTIPLICATION)
 
 
-def BITS(p, value, reg=REG.A):
-    clearRegister(p, reg)
-    value.evalToRegInstr(p, REG.B)
+def SHIFT_LEFT(p, reg):
+    ADD(p, reg, reg)
 
+
+# REGISTERS
+# A - memory ID
+# B - ACCUMULATOR / left operand
+# C - right operand
+# D - Temp
+# E - Temp
+# F - Temp
+# G
+# H - CONDITION RESULT
+def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C):
+    REG_NUMERATOR = REG.E
+    REG_DENOMINATOR = REG.F
+    REG_BITS = REG.A
+    REG_TEMP = REG.D
+    clearRegister(p, REG_QUOTIENT)                      # Q = 0
+    clearRegister(p, REG_REMAINDER)                     # R = 0
+    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
+    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
+
+    # BEGIN CALC BITS
+    # calculate number of bits of numerator: n
+    clearRegister(p, REG_BITS)
+    COPY(p, REG_TEMP, REG_NUMERATOR)
     LABEL_CONDITION = p.getCounter()
-    fjzero = FutureJZERO(p, REG.B)
-
-    INC(p, reg)
-    HALF(p, REG.B)
-
+    fjzero = FutureJZERO(p, REG_TEMP)
+    INC(p, REG_BITS)
+    HALF(p, REG_TEMP)
     fjump = FutureJUMP(p)    
     LABEL_END = p.getCounter()
-
     fjzero.materialize(LABEL_END)
     fjump.materialize(LABEL_CONDITION)
+    # END CALC BITS
+
+    # FOR i = n - 1 .. 0 do
+    SHIFT_LEFT(p, REG_REMAINDER)                # R = R << 1
     
 
-def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C):
-    # A - N number of bits of numerator
-    # B - quotient (iloraz)
-    # C - remainder (reszta)
-    # D - numerator (licznik)
-    # E - denominator (mianownik)
-    # F - i iterator from n...0
-    REG_NUMERATOR = REG.D
-    REG_DENOMINATOR = REG.E
 
-    if REG_QUOTIENT in [REG_NUMERATOR, REG_DENOMINATOR, REG_REMAINDER]:
-        raise Exception("Register use collision: '%s'" % REG_QUOTIENT)
-    if REG_REMAINDER in [REG_NUMERATOR, REG_DENOMINATOR, REG_QUOTIENT]:
-        raise Exception("Register use collision: '%s'" % REG_REMAINDER)
+    # ENDFOR
 
-    BITS(p, numeratorVal, REG.A)
 
-    clearRegister(p, REG_QUOTIENT)
-    clearRegister(p, REG_REMAINDER)
-    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)
-    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)
     
 
 
