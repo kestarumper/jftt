@@ -100,9 +100,8 @@ def clearRegister(p, reg):
 
 
 def READ(p, identifier):
-    memoryId = identifier.memoryId
+    identifier.memAddressToReg(p, REG.A, REG.B)
     GET(p, REG.B)
-    setRegisterConst(p, REG.A, memoryId)
     STORE(p, REG.B)
 
 
@@ -114,14 +113,13 @@ def WRITE(p, value):
 def setRegisterConst(p, reg, val):
     clearRegister(p, reg)
 
-    # number to binary representation
-    binVal = bin(val)[2:]
-    length = len(binVal)
+    binVal = bin(val)[2:]   # number to binary representation
+    length = len(binVal)    # how many digits
     for i, digit in enumerate(binVal):
         if digit == '1':
-            INC(p, reg)
+            INC(p, reg)         # reg = reg + 1
         if i < length - 1:
-            ADD(p, reg, reg) 
+            ADD(p, reg, reg)    # reg = reg << 1
 
 
 
