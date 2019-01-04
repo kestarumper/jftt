@@ -12,7 +12,6 @@ class MemoryManager:
     def runMemCheck(self, declarations):
         self.declarations = declarations
         self.checkDuplicateDeclarations()
-        self.checkIfAllSymbolsAreDeclared()
 
     def checkDuplicateDeclarations(self):
         for decl in self.declarations:
@@ -21,12 +20,12 @@ class MemoryManager:
                 raise Exception("Duplicate declaration for '%s'" % pidentifier)
             self.declaredPidentifiers.add(pidentifier)
 
-    def checkIfAllSymbolsAreDeclared(self):
-        symbols = self.getSymbols()
-        declaredSymbols = self.declaredPidentifiers
-        for sym in symbols:
-            if sym not in declaredSymbols:
-                raise Exception("Symbol '%s' not declared" % sym)
+    # def checkIfAllSymbolsAreDeclared(self):
+    #     symbols = self.getSymbols()
+    #     declaredSymbols = self.declaredPidentifiers
+    #     for sym in symbols:
+    #         if sym not in declaredSymbols:
+    #             raise Exception("Symbol '%s' not declared" % sym)
 
     def listDeclarationsMemory(self):
         print("DECLARATIONS:")
@@ -34,14 +33,15 @@ class MemoryManager:
         print("MEMORY:")
         print(self.memmap)
 
+    def unregister(self, declaration):
+        try:
+            del self.memmap[declaration.pidentifier]
+            declaration.memoryId = None
+        except KeyError as key:
+            raise Exception("Trying to unregister not declared identifier %s" % key)
+
     def assignMem(self, declaration):
         pidentifier = declaration.pidentifier
-
-        if pidentifier not in self.memmap:
-            self.registerSymbol(pidentifier)
-
-        if self.memmap[pidentifier] != None:
-            raise Exception("Duplicate memory assignment for symbol '%s'" % pidentifier)
 
         blockLength = 1
         if declaration.isArray():
@@ -58,17 +58,21 @@ class MemoryManager:
         for declaration in self.declarations:
             self.assignMem(declaration)
 
-    def registerSymbol(self, pidentifier):
-        if pidentifier not in self.memmap:
-            self.memmap[pidentifier] = None
+    # def registerSymbol(self, pidentifier):
+    #     if pidentifier not in self.memmap:
+    #         self.memmap[pidentifier] = None
 
     def getSymbols(self):
         return self.memmap.keys()
 
     def getBlockId(self, name):
-        if not name in self.memmap:
-            raise Exception("Identifier %s has no memory allocated" % name)
-        return self.memmap[name].memoryId
+        try:
+            memoryId = self.memmap[name].memoryId
+            if memoryId == None:
+                raise Exception("Identifier '%s' has no memory allocated" % name)
+            return memoryId
+        except KeyError:
+            raise Exception("Identifier '%s' is not declared in current context" % name)
 
     def getDeclarationByPidentifier(self, pid):
         decl = self.memmap[pid]

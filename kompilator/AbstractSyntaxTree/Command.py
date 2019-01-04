@@ -1,5 +1,6 @@
 import Instructions
-
+from AbstractSyntaxTree.Declarations import DeclarationVariable
+from AbstractSyntaxTree.Identifier import Identifier
 
 class Command:
     def __init__(self):
@@ -60,6 +61,13 @@ class CommandForTo(Command):
         self.fromValue = fromValue
         self.toValue = toValue
         self.commands = commands
+
+    def generateCode(self, p):
+        declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
+        declaredIterator.register()
+
+        declaredIterator.delete()
+
 
 
 class CommandForDownto(CommandForTo):

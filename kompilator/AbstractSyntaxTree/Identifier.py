@@ -4,7 +4,6 @@ import Instructions
 class Identifier:
     def __init__(self, pidentifier):
         self.pidentifier = pidentifier
-        MemoryManager.registerSymbol(pidentifier)
 
     @property
     def declaration(self):

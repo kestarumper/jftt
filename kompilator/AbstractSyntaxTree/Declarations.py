@@ -1,11 +1,18 @@
 from Memory import manager as MemoryManager
 
 class DeclarationVariable:
-    def __init__(self, pidentifier, isarr = False):
+    def __init__(self, pidentifier, isarr = False, islocal = False):
         self.memoryId = None
         self.pidentifier = pidentifier
         self.isarr = isarr
         self.length = 1
+        self.islocal = islocal
+
+    def delete(self):
+        MemoryManager.unregister(self)
+
+    def register(self):
+        MemoryManager.assignMem(self)
 
     def isArray(self):
         return self.isarr == True
