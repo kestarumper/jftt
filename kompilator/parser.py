@@ -1,8 +1,8 @@
 from tokenizer import lexer, tokens
 import ply.yacc as yacc
 from AbstractSyntaxTree.Condition import Condition
-from AbstractSyntaxTree.Expression import ValueFromIdentifier, Number, Expression, Identifier, BinaryOperator
-from AbstractSyntaxTree.ArrayAccess import ArrayAccessByNum, ArrayAccessByPidentifier
+from AbstractSyntaxTree.Expression import ValueFromIdentifier, Number, Expression, BinaryOperator
+from AbstractSyntaxTree.Identifier import Identifier, ArrayAccessByNum, ArrayAccessByPidentifier
 from AbstractSyntaxTree.Command import *
 from AbstractSyntaxTree.Declarations import *
 from Program import Program

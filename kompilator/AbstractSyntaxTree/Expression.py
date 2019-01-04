@@ -1,6 +1,5 @@
-from Memory import manager as MemoryManager
 import Instructions
-
+from AbstractSyntaxTree.Identifier import ArrayAccess
 
 class Expression:
     def evalToRegInstr(self, p, reg):
@@ -20,17 +19,9 @@ class ValueFromIdentifier(Expression):
         self.identifier = identifier
 
     def evalToRegInstr(self, p, reg):
+        if isinstance(self.identifier, ArrayAccess):
+            return Instructions.LOAD_ARRAY_VALUE_TO_REGISTER(p, self.identifier, reg)
         return Instructions.LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, self.identifier, reg)
-
-
-class Identifier:
-    def __init__(self, pidentifier):
-        self.pidentifier = pidentifier
-        MemoryManager.registerSymbol(pidentifier)
-
-    @property
-    def memoryId(self):
-        return MemoryManager.getBlockId(self.pidentifier)
 
 
 class BinaryOperator(Expression):

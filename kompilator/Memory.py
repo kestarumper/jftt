@@ -59,7 +59,8 @@ class MemoryManager:
             self.assignMem(declaration)
 
     def registerSymbol(self, pidentifier):
-        self.memmap[pidentifier] = None
+        if pidentifier not in self.memmap:
+            self.memmap[pidentifier] = None
 
     def getSymbols(self):
         return self.memmap.keys()
@@ -68,5 +69,11 @@ class MemoryManager:
         if not name in self.memmap:
             raise Exception("Identifier %s has no memory allocated" % name)
         return self.memmap[name].memoryId
+
+    def getDeclarationByPidentifier(self, pid):
+        decl = self.memmap[pid]
+        if not decl:
+            raise Exception("Declaration '%s' not found" % pid)
+        return decl
 
 manager = MemoryManager()

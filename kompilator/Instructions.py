@@ -119,20 +119,23 @@ def setRegisterConst(p, reg, val):
 
 
 def ASSIGN(p, identifier, expression):
-    memoryId = identifier.memoryId
+    print(identifier)
     expression.evalToRegInstr(p, REG.B)
-    setRegisterConst(p, REG.A, memoryId)
+    identifier.memAddressToReg(p, REG.A, REG.C)
+    # p.makeInstr('PUT')
     STORE(p, REG.B)
 
 
-def LOAD_MEM_TO_REG(p, memoryId, reg):
-    setRegisterConst(p, REG.A, memoryId)
+def LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, identifier, reg):
+    if reg == REG.A:
+        raise Exception("Registers collision '%s'" % reg)
+    identifier.memAddressToReg(p, REG.A, reg)
     LOAD(p, reg)
 
 
-def LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, identifier, reg):
-    memoryId = identifier.memoryId
-    LOAD_MEM_TO_REG(p, memoryId, reg)
+def LOAD_ARRAY_VALUE_TO_REGISTER(p, identifier, reg):
+    identifier.memAddressToReg(p, REG.A, reg)
+    LOAD(p, reg)
 
 
 def LOAD_NUMBER_VALUE_TO_REGISTER(p, number, reg):
