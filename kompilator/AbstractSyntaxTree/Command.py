@@ -65,9 +65,10 @@ class CommandForTo(Command):
     def generateCode(self, p):
         declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
         declaredIterator.register()
-
+        iteratorIdentifier = Identifier(self.pidentifier)
+        Instructions.FOR_TO(p, self.fromValue, self.toValue,
+            iteratorIdentifier, self.commands)
         declaredIterator.delete()
-
 
 
 class CommandForDownto(CommandForTo):

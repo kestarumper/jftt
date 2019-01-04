@@ -124,10 +124,8 @@ def setRegisterConst(p, reg, val):
 
 
 def ASSIGN(p, identifier, expression):
-    print(identifier)
     expression.evalToRegInstr(p, REG.B)
     identifier.memAddressToReg(p, REG.A, REG.C)
-    # p.makeInstr('PUT')
     STORE(p, REG.B)
 
 
@@ -221,7 +219,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     REG_DENOMINATOR = REG.F
     REG_BITS = REG.A
     REG_TEMP = REG.D
-    REG_TEMP2 = REG.H
+    REG_TEMP2 = REG.G
 
     denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
     fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_DENOMINATOR)
@@ -389,3 +387,37 @@ def WHILE(p, cond, commands):
     fJumpIntoWhile.materialize(LABEL_WHILE_INSIDE)
     fJumpOutOfWhile.materialize(LABEL_WHILE_END)
     fJumpLoop.materialize(LABEL_WHILE_CONDITION)
+
+def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
+    '''
+    A - memory address
+    H - Iterator
+    '''
+    rangeFromValue.evalToRegInstr(p, REG.B)
+    identifier.memAddressToReg(p, REG.A, None)
+    STORE(p, REG.B)
+    rangeToValue.evalToRegInstr(p, REG.H)
+    INC(p, REG.H)
+    SUB(p, REG.H, REG.B)    # tyle razy ma sie wykonać 
+
+    LABEL_LOOP = p.getCounter()
+    fJUMP_TO_END_IF_ITERATOR_IS_ZERO = FutureJZERO(p, REG.H)
+
+    for com in commands:
+        com.generateCode(p)
+
+    DEC(p, REG.H)
+
+    rangeToValue.evalToRegInstr(p, REG.C)
+    INC(p, REG.C)
+    identifier.memAddressToReg(p, REG.A, None)
+    LOAD(p, REG.B)
+    SUB(p, REG.C, REG.H)
+    STORE(p, REG.C)
+    
+    fJUMP_LOOP = FutureJUMP(p)
+    LABEL_END_FOR = p.getCounter()
+
+    fJUMP_TO_END_IF_ITERATOR_IS_ZERO.materialize(LABEL_END_FOR)
+    fJUMP_LOOP.materialize(LABEL_LOOP)
+    # setRegisterConst(p, REG.H, ran) # i = 
