@@ -49,7 +49,7 @@ class MemoryManager:
 
         assignedMemoryBlockId = self.lastblockid
         
-        self.memmap[pidentifier] = assignedMemoryBlockId
+        self.memmap[pidentifier] = declaration
         declaration.memoryId = assignedMemoryBlockId
 
         self.lastblockid += blockLength
@@ -66,8 +66,7 @@ class MemoryManager:
 
     def getBlockId(self, name):
         if not name in self.memmap:
-            raise MemoryException("Identifier %s has no memory allocated" % name)
-        return self.memmap[name]
-
+            raise Exception("Identifier %s has no memory allocated" % name)
+        return self.memmap[name].memoryId
 
 manager = MemoryManager()

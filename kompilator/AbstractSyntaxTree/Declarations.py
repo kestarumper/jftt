@@ -10,10 +10,13 @@ class DeclarationVariable:
     def isArray(self):
         return self.isarr == True
 
+    def __repr__(self):
+        return str((self.memoryId, self.length, "Array" if self.isarr else "Var" ))
+
 class DeclarationArray(DeclarationVariable):
     def __init__(self, pidentifier, rangeFrom, rangeTo):
         super(DeclarationArray, self).__init__(pidentifier, True)
-        if rangeFrom >= rangeTo:
+        if rangeFrom > rangeTo:
             raise Exception("Bad array range (%i:%i)" % (rangeFrom, rangeTo))
         self.rangeFrom = rangeFrom
         self.rangeTo = rangeTo
