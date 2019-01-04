@@ -113,9 +113,16 @@ def WRITE(p, value):
 
 def setRegisterConst(p, reg, val):
     clearRegister(p, reg)
-    while val > 0:
-        INC(p, reg)
-        val -= 1
+
+    # number to binary representation
+    binVal = bin(val)[2:]
+    length = len(binVal)
+    for i, digit in enumerate(binVal):
+        if digit == '1':
+            INC(p, reg)
+        if i < length - 1:
+            ADD(p, reg, reg) 
+
 
 
 def ASSIGN(p, identifier, expression):
