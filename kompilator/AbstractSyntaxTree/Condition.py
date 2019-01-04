@@ -9,8 +9,12 @@ class Condition:
     def generateCode(self, p):
         if self.operator == '>':
             return Instructions.CONDITION_GT(p, self.left, self.right)
+        if self.operator == '>=':
+            return Instructions.CONDITION_GEQ(p, self.left, self.right)
         if self.operator == '<':
             return Instructions.CONDITION_LT(p, self.left, self.right)
+        if self.operator == '<=':
+            return Instructions.CONDITION_LEQ(p, self.left, self.right)
         if self.operator == '=':
             return Instructions.CONDITION_EQ(p, self.left, self.right)
         if self.operator == '!=':

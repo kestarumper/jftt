@@ -1,0 +1,57 @@
+DECLARE
+    a; b; c;
+IN
+    a := 1;
+    b := 2;
+    c := 1;
+    IF a < b THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF b > a THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF a <= c THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF c <= a THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF a <= b THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF b <= a THEN
+        WRITE 0;
+    ELSE 
+        WRITE 1;
+    ENDIF
+    IF a >= b THEN
+        WRITE 0;
+    ELSE 
+        WRITE 1;
+    ENDIF
+    IF a >= c THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF b >= c THEN
+        WRITE 1;
+    ELSE 
+        WRITE 0;
+    ENDIF
+    IF c >= b THEN
+        WRITE 0;
+    ELSE 
+        WRITE 1;
+    ENDIF
+END
