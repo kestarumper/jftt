@@ -14,7 +14,7 @@
 # HALT zatrzymaj program 0
 
 from Register import REG
-
+from AbstractSyntaxTree.Command import CommandForTo
 
 class Future:
     def materialize(self, j):
@@ -421,14 +421,21 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
 
     for com in commands:
         com.generateCode(p)
+        if isinstance(com, CommandForTo):
+            # restore count loop if there are nested FORs
+            identifier.memAddressToReg(p, REG.A, None)
+            LOAD(p, REG.B)
+            rangeToValue.evalToRegInstr(p, REG.H)
+            INC(p, REG.H)
+            SUB(p, REG.H, REG.B)
 
     DEC(p, REG.H)
 
-    rangeToValue.evalToRegInstr(p, REG.C)
-    INC(p, REG.C)
+    rangeToValue.evalToRegInstr(p, REG.B)
+    INC(p, REG.B)
     identifier.memAddressToReg(p, REG.A, None)
-    SUB(p, REG.C, REG.H)
-    STORE(p, REG.C)
+    SUB(p, REG.B, REG.H)
+    STORE(p, REG.B)
     
     fJUMP_LOOP = FutureJUMP(p)
     LABEL_END_FOR = p.getCounter()
@@ -455,6 +462,13 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
 
     for com in commands:
         com.generateCode(p)
+        if isinstance(com, CommandForTo):
+            # restore count loop if there are nested FORs
+            identifier.memAddressToReg(p, REG.A, None)
+            LOAD(p, REG.H)
+            INC(p, REG.H)
+            rangeToValue.evalToRegInstr(p, REG.B)
+            SUB(p, REG.H, REG.B)
 
     DEC(p, REG.H)                                               # rH := rH - 1
 

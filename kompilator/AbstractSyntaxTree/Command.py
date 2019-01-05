@@ -1,6 +1,7 @@
 import Instructions
 from AbstractSyntaxTree.Declarations import DeclarationVariable
 from AbstractSyntaxTree.Identifier import Identifier
+from Memory import manager as MemoryManager
 
 class Command:
     def __init__(self):
@@ -67,12 +68,16 @@ class CommandForTo(Command):
         self.commands = commands
 
     def generateCode(self, p):
+        print("FOR BEGIN")
         declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
         declaredIterator.register()
         iteratorIdentifier = Identifier(self.pidentifier)
+        print("INSIDE", MemoryManager.memmap)
         Instructions.FOR_TO(p, self.fromValue, self.toValue,
             iteratorIdentifier, self.commands)
         declaredIterator.delete()
+        print("OUTSIDE", MemoryManager.memmap)
+        print("FOR END")
 
 
 class CommandForDownto(CommandForTo):
