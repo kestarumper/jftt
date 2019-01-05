@@ -2,14 +2,27 @@
 DECLARE
     n; m; reszta; potega; dzielnik;
 IN
-    n := 0;
-    FOR i FROM 3 DOWNTO 2 DO
-        FOR j FROM 5 TO 6 DO
-            FOR k FROM 8 DOWNTO 7 DO
-                WRITE i;
-                WRITE j;
-                WRITE k;
-            ENDFOR
-        ENDFOR
-    ENDFOR
+    READ n;
+    dzielnik := 2;
+    m := dzielnik * dzielnik;
+    WHILE n >= m DO
+        potega := 0;
+        reszta := n % dzielnik;
+        WHILE reszta = 0 DO
+            n := n / dzielnik;
+            potega := potega + 1;
+            reszta := n % dzielnik;
+        ENDWHILE
+        IF potega > 0 THEN [ czy znaleziono dzielnik ]
+            WRITE dzielnik;
+            WRITE potega;
+        ELSE
+            dzielnik := dzielnik + 1;
+            m := dzielnik * dzielnik;
+        ENDIF
+    ENDWHILE
+    IF n != 1 THEN [ ostatni dzielnik ]
+        WRITE n;
+        WRITE 1;
+    ENDIF
 END
