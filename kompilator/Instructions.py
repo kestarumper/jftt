@@ -15,6 +15,7 @@
 
 from Register import REG
 from AbstractSyntaxTree.Command import CommandForTo
+from Memory import manager as MemoryManager
 
 class Future:
     def materialize(self, j):
@@ -411,10 +412,26 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     A - memory address
     H - Iterator
     '''
+    print(rangeToValue)
+
+    # # MAKE COPY OF range FROM
+    # rangeFromValueMemBlockCopy = MemoryManager.getUnnamedMemBlock()
+    # setRegisterConst(p, REG.A, rangeFromValueMemBlockCopy)
+    # rangeFromValue.evalToRegInstr(p, REG.B)
+    # STORE(p, REG.B)
+    
+
+    # i = rangeFfrom
     rangeFromValue.evalToRegInstr(p, REG.B)
     identifier.memAddressToReg(p, REG.A, None)
     STORE(p, REG.B)
+
+    # make copy of rangeTo
     rangeToValue.evalToRegInstr(p, REG.H)
+    rangeToValueMemBlockCopy = MemoryManager.getUnnamedMemBlock()
+    setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+    STORE(p, REG.H)
+
     INC(p, REG.H)
     SUB(p, REG.H, REG.B)    # tyle razy ma sie wykonać 
 
@@ -427,13 +444,19 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
             # restore count loop if there are nested FORs
             identifier.memAddressToReg(p, REG.A, None)
             LOAD(p, REG.B)
-            rangeToValue.evalToRegInstr(p, REG.H)
+
+            setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+            LOAD(p, REG.H)
+
             INC(p, REG.H)
             SUB(p, REG.H, REG.B)
 
-    DEC(p, REG.H)
+    DEC(p, REG.H)   # rH = rH - 1
 
-    rangeToValue.evalToRegInstr(p, REG.B)
+    # rB = rangeTo
+    setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+    LOAD(p, REG.B)
+
     INC(p, REG.B)
     identifier.memAddressToReg(p, REG.A, None)
     SUB(p, REG.B, REG.H)

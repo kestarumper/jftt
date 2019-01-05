@@ -58,6 +58,11 @@ class MemoryManager:
         for declaration in self.declarations:
             self.assignMem(declaration)
 
+    def getUnnamedMemBlock(self):
+        assignedMem = self.lastblockid
+        self.lastblockid += 1
+        return assignedMem
+
     # def registerSymbol(self, pidentifier):
     #     if pidentifier not in self.memmap:
     #         self.memmap[pidentifier] = None
