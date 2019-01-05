@@ -17,6 +17,7 @@ from Register import REG
 from AbstractSyntaxTree.Command import CommandForTo
 from Memory import manager as MemoryManager
 
+
 class Future:
     def materialize(self, j):
         raise Exception("Materialize not defined for %s" % self.__class__)
@@ -31,6 +32,7 @@ class FutureJZERO(Future):
     def materialize(self, j):
         self.program.instructions[self.instrId] = "%s %s %s" % (
             'JZERO', self.X, j)
+
 
 class FutureJODD(Future):
     def __init__(self, program, X):
@@ -123,7 +125,6 @@ def setRegisterConst(p, reg, val):
             ADD(p, reg, reg)    # reg = reg << 1
 
 
-
 def ASSIGN(p, identifier, expression):
     expression.evalToRegInstr(p, REG.B)
     identifier.memAddressToReg(p, REG.A, REG.C)
@@ -200,7 +201,6 @@ def TIMES(p, leftValue, rightValue, destReg=REG.B, leftReg=REG.C, rightReg=REG.D
     fJUMP_TO_LOOP.materialize(LABEL_LOOP)
 
 
-
 def SHIFT_LEFT(p, reg):
     ADD(p, reg, reg)
 
@@ -214,7 +214,7 @@ def SHIFT_LEFT(p, reg):
 # F - Temp
 def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C, modulo=False):
     if modulo:
-        REG_QUOTIENT, REG_REMAINDER = REG_REMAINDER, REG_QUOTIENT 
+        REG_QUOTIENT, REG_REMAINDER = REG_REMAINDER, REG_QUOTIENT
 
     REG_NUMERATOR = REG.E
     REG_DENOMINATOR = REG.F
@@ -226,11 +226,10 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     clearRegister(p, REG_QUOTIENT)
     clearRegister(p, REG_REMAINDER)
     fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_DENOMINATOR)
-    
+
     numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
     clearRegister(p, REG_QUOTIENT)                      # Q = 0
     clearRegister(p, REG_REMAINDER)                     # R = 0
-
 
     # BEGIN CALC BITS
     # calculate number of bits of numerator: n
@@ -240,7 +239,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fjzero = FutureJZERO(p, REG_TEMP)
     INC(p, REG_BITS)
     HALF(p, REG_TEMP)
-    fjump = FutureJUMP(p)    
+    fjump = FutureJUMP(p)
     LABEL_CALC_BITS_END = p.getCounter()
     fjzero.materialize(LABEL_CALC_BITS_END)
     fjump.materialize(LABEL_CALC_BITS_BEGIN)
@@ -250,10 +249,10 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     LABEL_FOR_BEGIN = p.getCounter()
     fJUMP_FOR_END = FutureJZERO(p, REG_BITS)
     SHIFT_LEFT(p, REG_REMAINDER)                # R := R << 1
-    
+
     COPY(p, REG_TEMP, REG_NUMERATOR)
     COPY(p, REG_TEMP2, REG_BITS)
-    #LOOP_SHIFT_RIGHT n - 1 times
+    # LOOP_SHIFT_RIGHT n - 1 times
     DEC(p, REG_TEMP2)
     LABEL_LOOP_ITH_BIT_BEGIN = p.getCounter()
     fJUMP_LOOP_ITH_BIT_END = FutureJZERO(p, REG_TEMP2)
@@ -264,7 +263,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
 
     fJUMP_LOOP_ITH_BIT_END.materialize(LABEL_LOOP_ITH_BIT_END)
     fJUMP_LOOP_ITH_BIT_BEGIN.materialize(LABEL_LOOP_ITH_BIT_BEGIN)
-    #LOOP_SHIFT_RIGHT_END
+    # LOOP_SHIFT_RIGHT_END
 
     fJUMP_IF_ODD = FutureJODD(p, REG_TEMP)    # REG_TEMP == 0 ?
     fJUMP_IF_EVEN = FutureJUMP(p)
@@ -274,10 +273,9 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fJUMP_IF_ODD.materialize(LABEL_IS_ODD)
     fJUMP_IF_EVEN.materialize(LABEL_IS_EVEN)
 
-
     # IF R ≥ D THEN
-        # R := R − D
-        # Q(i) := 1
+    # R := R − D
+    # Q(i) := 1
     # ENDIF
     SHIFT_LEFT(p, REG_QUOTIENT)
     COPY(p, REG_TEMP, REG_REMAINDER)
@@ -297,7 +295,7 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     fJUMP_DIVISION_BY_ZERO.materialize(LABEL_FOR_END)
     fJUMP_FOR_END.materialize(LABEL_FOR_END)
     fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
-    # ENDFOR    
+    # ENDFOR
 
 
 def MODULO(p, value, mod, destReg):
@@ -309,16 +307,16 @@ def CONDITION_LT(p, leftVal, rightVal):
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
     INC(p, REG.B)
     SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
-                                            # rH == 0 = TRUE (left < right)
-                                            # rH != 0 = FALSE (left >= right)
+    # rH == 0 = TRUE (left < right)
+    # rH != 0 = FALSE (left >= right)
 
 
 def CONDITION_LEQ(p, leftVal, rightVal):
     leftVal.evalToRegInstr(p, REG.B)        # rH = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
     SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
-                                            # rH == 0 = TRUE (left <= right)
-                                            # rH != 0 = FALSE (left > right)
+    # rH == 0 = TRUE (left <= right)
+    # rH != 0 = FALSE (left > right)
 
 
 def CONDITION_GT(p, leftVal, rightVal):
@@ -336,8 +334,8 @@ def CONDITION_EQ(p, leftVal, rightVal):
     SUB(p, REG.B, REG.C)                    # rB = max{rB - rC, 0}
     SUB(p, REG.C, REG.D)                    # rC = max{rC - rD, 0}
     ADD(p, REG.B, REG.C)                    # rB = rB + rC
-                                            # 0 + 0 == TRUE (B == 0)
-                                            # 1 + 0 v 0 + 1 == FALSE (B != 0)
+    # 0 + 0 == TRUE (B == 0)
+    # 1 + 0 v 0 + 1 == FALSE (B != 0)
 
 
 def CONDITION_NEQ(p, leftVal, rightVal):
@@ -407,6 +405,17 @@ def WHILE(p, cond, commands):
     fJumpOutOfWhile.materialize(LABEL_WHILE_END)
     fJumpLoop.materialize(LABEL_WHILE_CONDITION)
 
+
+def DO_WHILE(p, cond, commands):
+    LABEL_WHILE_INSIDE = p.getCounter()
+    for com in commands:                        # WHILE BODY COMMANDS
+        com.generateCode(p)
+    cond.generateCode(p)                        # CONDITION
+    fJumpIntoWhile = FutureJZERO(p, REG.B)      # ENTER WHILE IF TRUE
+
+    fJumpIntoWhile.materialize(LABEL_WHILE_INSIDE)
+
+
 def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     '''
     A - memory address
@@ -425,7 +434,7 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     STORE(p, REG.H)
 
     INC(p, REG.H)
-    SUB(p, REG.H, REG.B)    # tyle razy ma sie wykonać 
+    SUB(p, REG.H, REG.B)    # tyle razy ma sie wykonać
 
     LABEL_LOOP = p.getCounter()
     fJUMP_TO_END_IF_ITERATOR_IS_ZERO = FutureJZERO(p, REG.H)
@@ -453,7 +462,7 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     identifier.memAddressToReg(p, REG.A, None)
     SUB(p, REG.B, REG.H)
     STORE(p, REG.B)
-    
+
     fJUMP_LOOP = FutureJUMP(p)
     LABEL_END_FOR = p.getCounter()
 
@@ -476,12 +485,13 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
     rangeFromValue.evalToRegInstr(p, REG.H)
     identifier.memAddressToReg(p, REG.A, None)
     STORE(p, REG.H)                                             # i = FROM
-    
+
     INC(p, REG.H)
     SUB(p, REG.H, REG.B)                                        # loop count
 
     LABEL_LOOP = p.getCounter()
-    fJUMP_TO_END_IF_ITERATOR_IS_ZERO = FutureJZERO(p, REG.H)    # jump if rH == 0 ?
+    fJUMP_TO_END_IF_ITERATOR_IS_ZERO = FutureJZERO(
+        p, REG.H)    # jump if rH == 0 ?
 
     for com in commands:
         com.generateCode(p)
@@ -506,7 +516,7 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
     ADD(p, REG.B, REG.H)
     DEC(p, REG.B)
     STORE(p, REG.B)
-    
+
     fJUMP_LOOP = FutureJUMP(p)
     LABEL_END_FOR = p.getCounter()
 

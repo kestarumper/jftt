@@ -59,6 +59,8 @@ class CommandDoWhile(Command):
         self.commands = commands
         self.condition = condition
 
+    def generateCode(self, p):
+        return Instructions.DO_WHILE(p, self.condition, self.commands)
 
 class CommandForTo(Command):
     def __init__(self, pidentifier, fromValue, toValue, commands):
