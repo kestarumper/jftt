@@ -59,11 +59,13 @@ def p_command_ASSIGN(p):
 
 def p_command_IFTHENELSE(p):
     '''command  : IF condition THEN commands ELSE commands ENDIF'''
+    print("IF_THEN_ELSE at %i" % p.lineno(1))
     p[0] = CommandIfThenElse(p[2], p[4], p[6])
 
 
 def p_command_IFTHEN(p):
     '''command  : IF condition THEN commands ENDIF'''
+    print("IF_THEN at %i" % p.lineno(1))
     p[0] = CommandIfThen(p[2], p[4])
 
 
@@ -147,7 +149,7 @@ def p_identifier_arrayAccess_num(p):
 
 
 def p_error(p):
-    raise SyntaxError("Syntax error %s" % p)
+    raise SyntaxError("Syntax error %s at line %i" % (p, p.lineno))
 
 
 parser = yacc.yacc()

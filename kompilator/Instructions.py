@@ -327,14 +327,14 @@ def CONDITION_GEQ(p, leftVal, rightVal):
 
 
 def CONDITION_EQ(p, leftVal, rightVal):
-    leftVal.evalToRegInstr(p, REG.B)        # rH = left
+    leftVal.evalToRegInstr(p, REG.B)        # rB = left
     rightVal.evalToRegInstr(p, REG.C)       # rC = right
-    COPY(p, REG.D, REG.B)                   # rB = rH
-    SUB(p, REG.B, REG.C)                    # rH = max{rH - rC, 0}
-    SUB(p, REG.C, REG.D)                    # rC = max{rC - rB, 0}
-    ADD(p, REG.B, REG.C)                    # rH = rH + rC
-                                            # 0 + 0 == TRUE (H == 0)
-                                            # 1 + 0 v 0 + 1 == FALSE (H != 0)
+    COPY(p, REG.D, REG.B)                   # rD = rB
+    SUB(p, REG.B, REG.C)                    # rB = max{rB - rC, 0}
+    SUB(p, REG.C, REG.D)                    # rC = max{rC - rD, 0}
+    ADD(p, REG.B, REG.C)                    # rB = rB + rC
+                                            # 0 + 0 == TRUE (B == 0)
+                                            # 1 + 0 v 0 + 1 == FALSE (B != 0)
 
 
 def CONDITION_NEQ(p, leftVal, rightVal):

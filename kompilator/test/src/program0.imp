@@ -1,19 +1,28 @@
-[ sito Eratostenesa ]
+[ Rozklad liczby na czynniki pierwsze ]
 DECLARE
-    n; j; sito(2:100);
+    n; m; reszta; potega; dzielnik;
 IN
-    n := 100;
-    FOR i FROM n DOWNTO 2 DO
-        sito(i) := 1;
-    ENDFOR
-    FOR i FROM 2 TO n DO
-        IF sito(i) != 0 THEN
-            j := i + i;
-            WHILE j <= n DO
-                sito(j) := 0;
-                j := j + i;
-            ENDWHILE
-            WRITE i;
+    READ n;
+    dzielnik := 2;
+    m := dzielnik * dzielnik;
+    WHILE n >= m DO
+        potega := 0;
+        reszta := n % dzielnik;
+        WHILE reszta = 0 DO
+            n := n / dzielnik;
+            potega := potega + 1;
+            reszta := n % dzielnik;
+        ENDWHILE
+        IF potega > 0 THEN [ czy znaleziono dzielnik ]
+            WRITE dzielnik;
+            WRITE potega;
+        ELSE
+            dzielnik := dzielnik + 1;
+            m := dzielnik * dzielnik;
         ENDIF
-    ENDFOR
+    ENDWHILE
+    IF n != 1 THEN [ ostatni dzielnik ]
+        WRITE n;
+        WRITE 1;
+    ENDIF
 END

@@ -36,6 +36,11 @@ class CommandIfThenElse(CommandIfThen):
         super(CommandIfThenElse, self).__init__(condition, thenCommands)
         self.elseCommands = elseCommands
 
+    def generateCode(self, p):
+        Instructions.IF_THEN_ELSE(
+            p, self.condition, self.thenCommands, self.elseCommands)
+
+
 class CommandWhile(Command):
     def __init__(self, condition, commands):
         super(CommandWhile, self).__init__()
