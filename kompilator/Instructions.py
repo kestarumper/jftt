@@ -412,14 +412,6 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     A - memory address
     H - Iterator
     '''
-    print(rangeToValue)
-
-    # # MAKE COPY OF range FROM
-    # rangeFromValueMemBlockCopy = MemoryManager.getUnnamedMemBlock()
-    # setRegisterConst(p, REG.A, rangeFromValueMemBlockCopy)
-    # rangeFromValue.evalToRegInstr(p, REG.B)
-    # STORE(p, REG.B)
-    
 
     # i = rangeFfrom
     rangeFromValue.evalToRegInstr(p, REG.B)
@@ -474,11 +466,17 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
     A - memory address
     H - Iterator
     '''
+
+    # make copy of rangeTo
     rangeToValue.evalToRegInstr(p, REG.B)
+    rangeToValueMemBlockCopy = MemoryManager.getUnnamedMemBlock()
+    setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+    STORE(p, REG.B)
 
     rangeFromValue.evalToRegInstr(p, REG.H)
     identifier.memAddressToReg(p, REG.A, None)
     STORE(p, REG.H)                                             # i = FROM
+    
     INC(p, REG.H)
     SUB(p, REG.H, REG.B)                                        # loop count
 
@@ -492,12 +490,18 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
             identifier.memAddressToReg(p, REG.A, None)
             LOAD(p, REG.H)
             INC(p, REG.H)
-            rangeToValue.evalToRegInstr(p, REG.B)
+
+            setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+            LOAD(p, REG.B)
+
             SUB(p, REG.H, REG.B)
 
     DEC(p, REG.H)                                               # rH := rH - 1
 
-    rangeToValue.evalToRegInstr(p, REG.B)
+    # rB = rangeTo
+    setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
+    LOAD(p, REG.B)
+
     DEC(p, REG.B)
     identifier.memAddressToReg(p, REG.A, None)
     ADD(p, REG.B, REG.H)

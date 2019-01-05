@@ -12,5 +12,6 @@ IN
         WRITE i;
         m := m + 1;
     ENDFOR
+    WRITE m;
 END
 
