@@ -76,6 +76,13 @@ class CommandForDownto(CommandForTo):
         super(CommandForDownto, self).__init__(
             pidentifier, fromValue, toValue, commands)
 
+    def generateCode(self, p):
+        declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
+        declaredIterator.register()
+        iteratorIdentifier = Identifier(self.pidentifier)
+        Instructions.FOR_DOWNTO(p, self.fromValue, self.toValue,
+            iteratorIdentifier, self.commands)
+        declaredIterator.delete()
 
 class CommandRead(Command):
     def __init__(self, identifier):

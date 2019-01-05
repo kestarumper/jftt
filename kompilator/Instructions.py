@@ -411,7 +411,6 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
     rangeToValue.evalToRegInstr(p, REG.C)
     INC(p, REG.C)
     identifier.memAddressToReg(p, REG.A, None)
-    LOAD(p, REG.B)
     SUB(p, REG.C, REG.H)
     STORE(p, REG.C)
     
@@ -420,4 +419,37 @@ def FOR_TO(p, rangeFromValue, rangeToValue, identifier, commands):
 
     fJUMP_TO_END_IF_ITERATOR_IS_ZERO.materialize(LABEL_END_FOR)
     fJUMP_LOOP.materialize(LABEL_LOOP)
-    # setRegisterConst(p, REG.H, ran) # i = 
+
+
+def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
+    '''
+    A - memory address
+    H - Iterator
+    '''
+    rangeToValue.evalToRegInstr(p, REG.B)
+
+    rangeFromValue.evalToRegInstr(p, REG.H)
+    identifier.memAddressToReg(p, REG.A, None)
+    STORE(p, REG.H)                                             # i = FROM
+    INC(p, REG.H)
+    SUB(p, REG.H, REG.B)                                        # loop count
+
+    LABEL_LOOP = p.getCounter()
+    fJUMP_TO_END_IF_ITERATOR_IS_ZERO = FutureJZERO(p, REG.H)    # jump if rH == 0 ?
+
+    for com in commands:
+        com.generateCode(p)
+
+    DEC(p, REG.H)                                               # rH := rH - 1
+
+    rangeToValue.evalToRegInstr(p, REG.B)
+    DEC(p, REG.B)
+    identifier.memAddressToReg(p, REG.A, None)
+    ADD(p, REG.B, REG.H)
+    STORE(p, REG.B)
+    
+    fJUMP_LOOP = FutureJUMP(p)
+    LABEL_END_FOR = p.getCounter()
+
+    fJUMP_TO_END_IF_ITERATOR_IS_ZERO.materialize(LABEL_END_FOR)
+    fJUMP_LOOP.materialize(LABEL_LOOP)
