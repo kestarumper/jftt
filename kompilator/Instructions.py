@@ -502,9 +502,9 @@ def FOR_DOWNTO(p, rangeFromValue, rangeToValue, identifier, commands):
     setRegisterConst(p, REG.A, rangeToValueMemBlockCopy)
     LOAD(p, REG.B)
 
-    DEC(p, REG.B)
     identifier.memAddressToReg(p, REG.A, None)
     ADD(p, REG.B, REG.H)
+    DEC(p, REG.B)
     STORE(p, REG.B)
     
     fJUMP_LOOP = FutureJUMP(p)

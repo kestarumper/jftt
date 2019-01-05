@@ -1,17 +1,24 @@
-[ Silnia
-? 20
-> 2432902008176640000
+[ for.imp 
+  12 23 34
+  507 4379 0
 ]
 DECLARE
-  s(0:100); n; m; a; j;
+	a; b; c;
 IN
-    n := 20;
-    s(0):=1;
-    m:=n;
-    FOR i FROM 40 DOWNTO m DO
-        WRITE i;
-        m := m + 1;
-    ENDFOR
-    WRITE m;
+	READ a;
+	READ b;
+	READ c;
+	FOR i FROM 9 DOWNTO 0 DO
+		FOR j FROM 0 TO i DO
+			FOR k FROM 0 TO j DO
+				a := a + k;
+				c := k * j;
+				c := c + i;
+				b := b + c;
+			ENDFOR
+		ENDFOR
+	ENDFOR
+	WRITE a;
+	WRITE b;
+	WRITE c;
 END
-
