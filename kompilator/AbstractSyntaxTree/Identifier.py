@@ -35,7 +35,6 @@ class ArrayAccessByNum(ArrayAccess):
             raise Exception("'%s' is not an Array" % declaration.pidentifier)
 
         memoryId = MemoryManager.getBlockId(self.pidentifier)
-        print("INDEX", self.index)
         arrRangeFrom = declaration.rangeFrom
         arrRangeTo = declaration.rangeTo
         offset = self.index - arrRangeFrom

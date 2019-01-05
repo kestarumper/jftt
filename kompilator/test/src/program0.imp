@@ -1,28 +1,23 @@
-[ Rozklad liczby na czynniki pierwsze ]
+[ div-mod.imp 
+  1 0
+  1 0 0 0
+]
 DECLARE
-    n; m; reszta; potega; dzielnik;
+	a; b; c;
 IN
-    READ n;
-    dzielnik := 2;
-    m := dzielnik * dzielnik;
-    WHILE n >= m DO
-        potega := 0;
-        reszta := n % dzielnik;
-        WHILE reszta = 0 DO
-            n := n / dzielnik;
-            potega := potega + 1;
-            reszta := n % dzielnik;
-        ENDWHILE
-        IF potega > 0 THEN [ czy znaleziono dzielnik ]
-            WRITE dzielnik;
-            WRITE potega;
-        ELSE
-            dzielnik := dzielnik + 1;
-            m := dzielnik * dzielnik;
-        ENDIF
-    ENDWHILE
-    IF n != 1 THEN [ ostatni dzielnik ]
-        WRITE n;
-        WRITE 1;
-    ENDIF
+	a := 1;
+	b := 0;
+    
+	c := a / a;
+	WRITE c;
+
+	c := a / b;
+	WRITE c;
+
+	c := a % a;
+	WRITE c;
+
+	c := a % b;
+	WRITE c;
 END
+

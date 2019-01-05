@@ -59,13 +59,11 @@ def p_command_ASSIGN(p):
 
 def p_command_IFTHENELSE(p):
     '''command  : IF condition THEN commands ELSE commands ENDIF'''
-    print("IF_THEN_ELSE at %i" % p.lineno(1))
     p[0] = CommandIfThenElse(p[2], p[4], p[6])
 
 
 def p_command_IFTHEN(p):
     '''command  : IF condition THEN commands ENDIF'''
-    print("IF_THEN at %i" % p.lineno(1))
     p[0] = CommandIfThen(p[2], p[4])
 
 

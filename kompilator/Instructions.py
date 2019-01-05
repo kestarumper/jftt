@@ -222,6 +222,8 @@ def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=RE
     REG_TEMP2 = REG.G
 
     denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
+    clearRegister(p, REG_QUOTIENT)
+    clearRegister(p, REG_REMAINDER)
     fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_DENOMINATOR)
     
     numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
