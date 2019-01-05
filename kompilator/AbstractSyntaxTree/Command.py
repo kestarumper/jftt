@@ -26,16 +26,15 @@ class CommandIfThen(Command):
         self.condition = condition
         self.thenCommands = thenCommands
 
+    def generateCode(self, p):
+        Instructions.IF_THEN(
+            p, self.condition, self.thenCommands)
+
 
 class CommandIfThenElse(CommandIfThen):
     def __init__(self, condition, thenCommands, elseCommands):
         super(CommandIfThenElse, self).__init__(condition, thenCommands)
         self.elseCommands = elseCommands
-
-    def generateCode(self, p):
-        Instructions.IF_THEN_ELSE(
-            p, self.condition, self.thenCommands, self.elseCommands)
-
 
 class CommandWhile(Command):
     def __init__(self, condition, commands):

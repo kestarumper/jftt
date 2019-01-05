@@ -1,16 +1,19 @@
+[ sito Eratostenesa ]
 DECLARE
-    a; b; tab(5:10);
+    n; j; sito(2:100);
 IN
-    a := 32;
-    b := 2137;
-    FOR i FROM 5 TO 10 DO
-        tab(i) := a;
-        a := a / 2;
-        WRITE i;
-        WRITE tab(i);
+    n := 100;
+    FOR i FROM n DOWNTO 2 DO
+        sito(i) := 1;
     ENDFOR
-    FOR i FROM 10 DOWNTO 5 DO
-        WRITE i;
-        WRITE tab(i);
+    FOR i FROM 2 TO n DO
+        IF sito(i) != 0 THEN
+            j := i + i;
+            WHILE j <= n DO
+                sito(j) := 0;
+                j := j + i;
+            ENDWHILE
+            WRITE i;
+        ENDIF
     ENDFOR
 END

@@ -340,11 +340,11 @@ def CONDITION_EQ(p, leftVal, rightVal):
 def CONDITION_NEQ(p, leftVal, rightVal):
     CONDITION_EQ(p, leftVal, rightVal)
     fJUMP_IF_EQUAL = FutureJZERO(p, REG.B)
-    clearRegister(p, REG.B)         # if H != 0 ==> H = TRUE
+    clearRegister(p, REG.B)         # if B != 0 ==> B = TRUE
     fJUMP_SKIP = FutureJUMP(p)
 
     LABEL_EQUAL = p.getCounter()
-    INC(p, REG.B)                   # if H == 0 ==> H = FALSE
+    INC(p, REG.B)                   # if B == 0 ==> B = FALSE
 
     LABEL_NOT_EQUAL = p.getCounter()
 
@@ -362,6 +362,22 @@ def IF_THEN_ELSE(p, cond, thenCommands, elseCommands):
     fjump = FutureJUMP(p)
     # ELSE END BLOCK
 
+    # THEN BLOCK
+    thenBlockStartLabel = p.getCounter()
+    for com in thenCommands:
+        com.generateCode(p)
+    thenBLockEndLabel = p.getCounter()
+    # THEN END BLOCK
+
+    fjzero.materialize(thenBlockStartLabel)
+    fjump.materialize(thenBLockEndLabel)
+
+
+def IF_THEN(p, cond, thenCommands):
+    cond.generateCode(p)
+
+    fjzero = FutureJZERO(p, REG.B)
+    fjump = FutureJUMP(p)
     # THEN BLOCK
     thenBlockStartLabel = p.getCounter()
     for com in thenCommands:
