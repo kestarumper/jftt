@@ -1,6 +1,7 @@
 import Instructions
 from AbstractSyntaxTree.Declarations import DeclarationVariable
 from AbstractSyntaxTree.Identifier import Identifier
+from AbstractSyntaxTree.Expression import ValueFromIdentifier
 from Memory import manager as MemoryManager
 
 
@@ -69,8 +70,15 @@ class CommandForTo(Command):
         self.fromValue = fromValue
         self.toValue = toValue
         self.commands = commands
+        if isinstance(self.toValue, ValueFromIdentifier):
+            if self.toValue.identifier.pidentifier == self.pidentifier:
+                raise Exception("Using iterator '%s' as TO range in FOR loop" % self.pidentifier)
+        if isinstance(self.fromValue, ValueFromIdentifier):
+            if self.fromValue.identifier.pidentifier == self.pidentifier:
+                raise Exception("Using iterator '%s' as FROM range in FOR loop" % self.pidentifier)
 
     def generateCode(self, p):
+
         declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
         declaredIterator.register()
         iteratorIdentifier = Identifier(self.pidentifier)

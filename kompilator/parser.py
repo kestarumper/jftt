@@ -147,7 +147,7 @@ def p_identifier_arrayAccess_num(p):
 
 
 def p_error(p):
-    raise SyntaxError("Syntax error %s at line %i" % (p, p.lineno))
+    raise SyntaxError("Unexpected token '%s' at line %i" % (p.value, p.lineno))
 
 
 parser = yacc.yacc()

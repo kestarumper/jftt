@@ -1,0 +1,9 @@
+DECLARE
+    a;
+IN
+    FOR i FROM 0 TO 2 DO
+        FOR j FROM 3 TO 4 DO
+            WRITE j;
+        ENDFOR
+    ENDFOR
+END

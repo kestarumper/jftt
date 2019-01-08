@@ -28,5 +28,6 @@ try:
     output = program.generateCode()
     writeToFile(outFile, output)
     print("Output file: '%s'" % outFile)
-except SyntaxError as err:
+except Exception as err:
     prRed(err)
+    exit(1)

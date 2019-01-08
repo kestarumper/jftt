@@ -126,6 +126,9 @@ def setRegisterConst(p, reg, val):
 
 
 def ASSIGN(p, identifier, expression):
+    decl = identifier.declaration
+    if decl.islocal:
+        raise Exception("Trying to modify local variable '%s'" % decl.pidentifier)
     expression.evalToRegInstr(p, REG.B)
     identifier.memAddressToReg(p, REG.A, REG.C)
     STORE(p, REG.B)
