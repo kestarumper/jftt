@@ -6,21 +6,24 @@ from Memory import manager as MemoryManager
 
 
 class Command:
-    def __init__(self):
-        pass
+    def __init__(self, lineNumber = -1):
+        self.lineNumber = lineNumber
 
     def generateCode(self, program):
         raise Exception("generateCode() not defined for %s" % self.__class__)
 
 
 class CommandAssign(Command):
-    def __init__(self, identifier, expression):
-        super(CommandAssign, self).__init__()
+    def __init__(self, identifier, expression, line=-1):
+        super(CommandAssign, self).__init__(lineNumber=line)
         self.identifier = identifier
         self.expression = expression
 
     def generateCode(self, p):
-        return Instructions.ASSIGN(p, self.identifier, self.expression)
+        try:
+            return Instructions.ASSIGN(p, self.identifier, self.expression)
+        except Exception as err:
+            raise Exception(str(err) + " at line %i" % self.lineNumber)
 
 
 class CommandIfThen(Command):
@@ -64,18 +67,18 @@ class CommandDoWhile(Command):
         return Instructions.DO_WHILE(p, self.condition, self.commands)
 
 class CommandForTo(Command):
-    def __init__(self, pidentifier, fromValue, toValue, commands):
-        super(CommandForTo, self).__init__()
+    def __init__(self, pidentifier, fromValue, toValue, commands, line=-1):
+        super(CommandForTo, self).__init__(lineNumber=line)
         self.pidentifier = pidentifier
         self.fromValue = fromValue
         self.toValue = toValue
         self.commands = commands
         if isinstance(self.toValue, ValueFromIdentifier):
             if self.toValue.identifier.pidentifier == self.pidentifier:
-                raise Exception("Using iterator '%s' as TO range in FOR loop" % self.pidentifier)
+                raise Exception("Using iterator '%s' as TO range in FOR loop at line %i" % (self.pidentifier, self.lineNumber))
         if isinstance(self.fromValue, ValueFromIdentifier):
             if self.fromValue.identifier.pidentifier == self.pidentifier:
-                raise Exception("Using iterator '%s' as FROM range in FOR loop" % self.pidentifier)
+                raise Exception("Using iterator '%s' as FROM range in FOR loop at line %i" % (self.pidentifier, self.lineNumber))
 
     def generateCode(self, p):
 

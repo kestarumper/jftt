@@ -17,7 +17,7 @@ class MemoryManager:
         for decl in self.declarations:
             pidentifier = decl.pidentifier
             if pidentifier in self.declaredPidentifiers:
-                raise Exception("Duplicate declaration for '%s'" % pidentifier)
+                raise Exception("Duplicate declaration for '%s' at line %i" % (pidentifier, decl.lineNumber))
             self.declaredPidentifiers.add(pidentifier)
 
     # def checkIfAllSymbolsAreDeclared(self):
@@ -42,6 +42,9 @@ class MemoryManager:
 
     def assignMem(self, declaration):
         pidentifier = declaration.pidentifier
+
+        if pidentifier in self.memmap and self.memmap[pidentifier].memoryId != None:
+            raise Exception("Duplicate memory allocation")
 
         blockLength = 1
         if declaration.isArray():
@@ -80,6 +83,9 @@ class MemoryManager:
             raise Exception("Identifier '%s' is not declared in current context" % name)
 
     def getDeclarationByPidentifier(self, pid):
+        if pid not in self.memmap:
+            raise Exception("Identifier '%s' is not declared in current context" % pid)
+
         decl = self.memmap[pid]
         if not decl:
             raise Exception("Declaration '%s' not found" % pid)

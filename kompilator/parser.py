@@ -17,7 +17,7 @@ def p_declarations_VARIABLE(p):
     '''declarations : declarations pidentifier SEMI'''
     if not p[1]:
         p[1] = []
-    newVariable = DeclarationVariable(p[2])
+    newVariable = DeclarationVariable(p[2], lineNumber=p.lineno(2))
     p[1].append(newVariable)
     p[0] = p[1]
 
@@ -29,7 +29,7 @@ def p_declarations_ARRAY(p):
     rangeFrom = p[4]
     rangeTo = p[6]
     pidentifier = p[2]
-    newArray = DeclarationArray(pidentifier, rangeFrom, rangeTo)
+    newArray = DeclarationArray(pidentifier, rangeFrom, rangeTo, line=p.lineno(2))
     p[1].append(newArray)
     p[0] = p[1]
 
@@ -54,7 +54,7 @@ def p_commands(p):
 
 def p_command_ASSIGN(p):
     '''command  : identifier ASSIGN expression SEMI'''
-    p[0] = CommandAssign(p[1], p[3])
+    p[0] = CommandAssign(p[1], p[3], line=p.lineno(2))
 
 
 def p_command_IFTHENELSE(p):
@@ -79,7 +79,7 @@ def p_command_DOWHILE(p):
 
 def p_command_FOR(p):
     '''command  : FOR pidentifier FROM value TO value DO commands ENDFOR'''
-    p[0] = CommandForTo(p[2], p[4], p[6], p[8])
+    p[0] = CommandForTo(p[2], p[4], p[6], p[8], p.lineno(1))
 
 
 def p_command_FORDOWNTO(p):
@@ -123,7 +123,7 @@ def p_condition(p):
 
 def p_value_identifier(p):
     '''value    : identifier'''
-    p[0] = ValueFromIdentifier(p[1])
+    p[0] = ValueFromIdentifier(p[1], lineNumber=p.lineno(1))
 
 
 def p_value_num(p):

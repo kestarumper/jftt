@@ -15,13 +15,17 @@ class Number(Expression):
 
 
 class ValueFromIdentifier(Expression):
-    def __init__(self, identifier):
+    def __init__(self, identifier, lineNumber=-1):
         self.identifier = identifier
+        self.lineNumber = lineNumber
 
     def evalToRegInstr(self, p, reg):
-        if isinstance(self.identifier, ArrayAccess):
-            return Instructions.LOAD_ARRAY_VALUE_TO_REGISTER(p, self.identifier, reg)
-        return Instructions.LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, self.identifier, reg)
+        try:
+            if isinstance(self.identifier, ArrayAccess):
+                return Instructions.LOAD_ARRAY_VALUE_TO_REGISTER(p, self.identifier, reg)
+            return Instructions.LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, self.identifier, reg)
+        except Exception as err:
+            raise Exception(str(err) + " at line %i" % self.lineNumber)
 
 
 class BinaryOperator(Expression):

@@ -1,9 +1,11 @@
 DECLARE
-    a;
+    b;
 IN
+    a := ;
     FOR i FROM 0 TO 2 DO
         FOR j FROM 3 TO 4 DO
-            WRITE j;
+            WRITE i;
         ENDFOR
+    WRITE i;
     ENDFOR
 END
