@@ -1,0 +1,10 @@
+DECLARE
+    a; b; c; r;
+IN
+    a := 25;
+    b := 6;
+    c := a / b;
+    r := a % b;
+    WRITE c;
+    WRITE r;
+END
