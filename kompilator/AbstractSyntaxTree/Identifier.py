@@ -38,7 +38,7 @@ class ArrayAccessByNum(ArrayAccess):
         arrRangeFrom = declaration.rangeFrom
         arrRangeTo = declaration.rangeTo
         offset = self.index - arrRangeFrom
-        if offset > arrRangeTo:
+        if offset < 0 :
             raise Exception("Array out of bounds. Given %i, but range is (%i:%i)" % (self.index, arrRangeFrom, arrRangeTo))
         Instructions.setRegisterConst(p, reg2, offset)
         Instructions.setRegisterConst(p, reg1, memoryId)
