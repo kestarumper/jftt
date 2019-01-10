@@ -1,8 +1,8 @@
 DECLARE
     a; b; c; r;
 IN
-    a := 25;
-    b := 6;
+    READ a;
+    READ b;
     c := a / b;
     r := a % b;
     WRITE c;

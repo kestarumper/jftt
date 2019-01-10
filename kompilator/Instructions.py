@@ -223,90 +223,83 @@ def SHIFT_LEFT(p, reg):
 # D - Temp
 # E - Temp
 # F - Temp
-def DIVIDE(p, numeratorVal, denominatorVal, REG_QUOTIENT=REG.B, REG_REMAINDER=REG.C, modulo=False):
+def DIVIDE(p, numeratorVal, denominatorVal, REG_RESULT=REG.B, REG_REMAIN=REG.C, modulo=False):
     if modulo:
-        REG_QUOTIENT, REG_REMAINDER = REG_REMAINDER, REG_QUOTIENT
+        REG_RESULT, REG_REMAIN = REG_REMAIN, REG_RESULT
 
-    REG_NUMERATOR = REG.E
-    REG_DENOMINATOR = REG.F
-    REG_BITS = REG.A
-    REG_TEMP = REG.D
-    REG_TEMP2 = REG.G
+    if REG_RESULT in [REG.A, REG.D, REG.E, REG_REMAIN] or REG_REMAIN in [REG.A, REG.D, REG.E, REG_RESULT]:
+        raise Exception("Register collision in DIVISION")
 
-    denominatorVal.evalToRegInstr(p, REG_DENOMINATOR)   # D = denominator
-    clearRegister(p, REG_QUOTIENT)
-    clearRegister(p, REG_REMAINDER)
-    fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_DENOMINATOR)
+    REG_SCALEDDIVISOR = REG.E
+    REG_MULTIPLE = REG.F
+    REG_TEMP = REG.G
 
-    numeratorVal.evalToRegInstr(p, REG_NUMERATOR)       # N = numerator
-    clearRegister(p, REG_QUOTIENT)                      # Q = 0
-    clearRegister(p, REG_REMAINDER)                     # R = 0
+    clearRegister(p, REG_RESULT)                     # result = 0
 
-    # BEGIN CALC BITS
-    # calculate number of bits of numerator: n
-    clearRegister(p, REG_BITS)
-    COPY(p, REG_TEMP, REG_NUMERATOR)
-    LABEL_CALC_BITS_BEGIN = p.getCounter()
-    fjzero = FutureJZERO(p, REG_TEMP)
-    INC(p, REG_BITS)
-    HALF(p, REG_TEMP)
-    fjump = FutureJUMP(p)
-    LABEL_CALC_BITS_END = p.getCounter()
-    fjzero.materialize(LABEL_CALC_BITS_END)
-    fjump.materialize(LABEL_CALC_BITS_BEGIN)
-    # END CALC BITS
+	# uint_type scaled_divisor = divisor;  // The right-hand side of division
+    denominatorVal.evalToRegInstr(p, REG_SCALEDDIVISOR)
+    # if(divisor == 0) {
+	#     return;
+	# }
+    fJUMP_DIVISION_BY_ZERO = FutureJZERO(p, REG_SCALEDDIVISOR)
 
-    # FOR i = n - 1 .. 0 do
-    LABEL_FOR_BEGIN = p.getCounter()
-    fJUMP_FOR_END = FutureJZERO(p, REG_BITS)
-    SHIFT_LEFT(p, REG_REMAINDER)                # R := R << 1
+    setRegisterConst(p, REG_MULTIPLE, 1)             # multiple = 1
+    numeratorVal.evalToRegInstr(p, REG_REMAIN)       # remain = dividend
 
-    COPY(p, REG_TEMP, REG_NUMERATOR)
-    COPY(p, REG_TEMP2, REG_BITS)
-    # LOOP_SHIFT_RIGHT n - 1 times
-    DEC(p, REG_TEMP2)
-    LABEL_LOOP_ITH_BIT_BEGIN = p.getCounter()
-    fJUMP_LOOP_ITH_BIT_END = FutureJZERO(p, REG_TEMP2)
-    HALF(p, REG_TEMP)
-    DEC(p, REG_TEMP2)
-    fJUMP_LOOP_ITH_BIT_BEGIN = FutureJUMP(p)
-    LABEL_LOOP_ITH_BIT_END = p.getCounter()
+    '''
+    while(scaled_divisor < dividend)
+	{
+	    scaled_divisor = scaled_divisor + scaled_divisor; // Multiply by two.
+	    multiple       = multiple       + multiple;       // Multiply by two.
+	}
+    '''
+    LABEL_WHILE_CONDITION = p.getCounter()
+    COPY(p, REG_TEMP, REG_REMAIN)
+    SUB(p, REG_TEMP, REG_SCALEDDIVISOR)
+    fJUMP_WHILE_END = FutureJZERO(p, REG_TEMP)
+    SHIFT_LEFT(p, REG_SCALEDDIVISOR)
+    SHIFT_LEFT(p, REG_MULTIPLE)
+    fJUMP_WHILE_COND = FutureJUMP(p)
+    LABEL_WHILE_END = p.getCounter()
+    '''	
+	do {
+	    if(scaled_divisor <= remain)
+	    {
+	        remain = remain - scaled_divisor;
+	        result = result + multiple;
+	    }
+	    scaled_divisor = scaled_divisor >> 1; // Divide by two.
+	    multiple       = multiple       >> 1;
+	} while(multiple != 0);
+    '''
+    LABEL_DO_WHILE_BEGIN = p.getCounter()
 
-    fJUMP_LOOP_ITH_BIT_END.materialize(LABEL_LOOP_ITH_BIT_END)
-    fJUMP_LOOP_ITH_BIT_BEGIN.materialize(LABEL_LOOP_ITH_BIT_BEGIN)
-    # LOOP_SHIFT_RIGHT_END
+    COPY(p, REG_TEMP, REG_SCALEDDIVISOR)
+    SUB(p, REG_TEMP, REG_REMAIN)
+    fJUMP_IF = FutureJZERO(p, REG_TEMP)
+    fJUMP_FALSE = FutureJUMP(p)
+    # THEN BLOCK
+    thenBlockStartLabel = p.getCounter()
+    SUB(p, REG_REMAIN, REG_SCALEDDIVISOR)
+    ADD(p, REG_RESULT, REG_MULTIPLE)
+    thenBLockEndLabel = p.getCounter()
+    # THEN END BLOCK
 
-    fJUMP_IF_ODD = FutureJODD(p, REG_TEMP)    # REG_TEMP == 0 ?
-    fJUMP_IF_EVEN = FutureJUMP(p)
-    LABEL_IS_ODD = p.getCounter()
-    INC(p, REG_REMAINDER)                       # R(0) := N(i)
-    LABEL_IS_EVEN = p.getCounter()
-    fJUMP_IF_ODD.materialize(LABEL_IS_ODD)
-    fJUMP_IF_EVEN.materialize(LABEL_IS_EVEN)
+    HALF(p, REG_SCALEDDIVISOR)
+    HALF(p, REG_MULTIPLE)
 
-    # IF R ≥ D THEN
-    # R := R − D
-    # Q(i) := 1
-    # ENDIF
-    SHIFT_LEFT(p, REG_QUOTIENT)
-    COPY(p, REG_TEMP, REG_REMAINDER)
-    INC(p, REG_TEMP)
-    SUB(p, REG_TEMP, REG_DENOMINATOR)   # R + 1 - D == 0
-    fJUMP_IF_R_LESSTHAN_D = FutureJZERO(p, REG_TEMP)
-    SUB(p, REG_REMAINDER, REG_DENOMINATOR)
-    INC(p, REG_QUOTIENT)
-    LABEL_R_LESSTHAN_D = p.getCounter()
+    fJUMP_DO_WHILE_CONDITION_FALSE = FutureJZERO(p, REG_MULTIPLE)
+    fJUMP_DO_WHILE_BEGIN = FutureJUMP(p)
 
-    fJUMP_IF_R_LESSTHAN_D.materialize(LABEL_R_LESSTHAN_D)
 
-    DEC(p, REG_BITS)
-    fJUMP_FOR_BEGIN = FutureJUMP(p)
-    LABEL_FOR_END = p.getCounter()
-
-    fJUMP_DIVISION_BY_ZERO.materialize(LABEL_FOR_END)
-    fJUMP_FOR_END.materialize(LABEL_FOR_END)
-    fJUMP_FOR_BEGIN.materialize(LABEL_FOR_BEGIN)
-    # ENDFOR
+    LABEL_END = p.getCounter()
+    fJUMP_DO_WHILE_CONDITION_FALSE.materialize(LABEL_END)
+    fJUMP_IF.materialize(thenBlockStartLabel)
+    fJUMP_FALSE.materialize(thenBLockEndLabel)
+    fJUMP_DO_WHILE_BEGIN.materialize(LABEL_DO_WHILE_BEGIN)
+    fJUMP_WHILE_COND.materialize(LABEL_WHILE_CONDITION)
+    fJUMP_WHILE_END.materialize(LABEL_WHILE_END)
+    fJUMP_DIVISION_BY_ZERO.materialize(LABEL_END)
 
 
 def MODULO(p, value, mod, destReg):
