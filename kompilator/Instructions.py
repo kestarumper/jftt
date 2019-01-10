@@ -15,6 +15,7 @@
 
 from Register import REG
 from AbstractSyntaxTree.Command import CommandForTo
+from AbstractSyntaxTree.Identifier import ArrayAccess
 from Memory import manager as MemoryManager
 
 
@@ -129,14 +130,19 @@ def ASSIGN(p, identifier, expression):
     decl = identifier.declaration
     if decl.islocal:
         raise Exception("Trying to modify local variable '%s'" % decl.pidentifier)
+    if not isinstance(identifier, ArrayAccess) and decl.isarr == True:
+        raise Exception("'%s' is an array, but used as normal variable" % decl.pidentifier)
     expression.evalToRegInstr(p, REG.B)
     identifier.memAddressToReg(p, REG.A, REG.C)
     STORE(p, REG.B)
 
 
 def LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, identifier, reg):
+    decl = identifier.declaration;
     if reg == REG.A:
         raise Exception("Registers collision '%s'" % reg)
+    if decl.isarr == True:
+        raise Exception("'%s' is an array, but accessed as normal variable" % decl.pidentifier)
     identifier.memAddressToReg(p, REG.A, reg)
     LOAD(p, reg)
 

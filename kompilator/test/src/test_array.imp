@@ -1,0 +1,19 @@
+DECLARE
+    a; b(3:6);
+IN
+    a := 2137;
+    b(1) := a;
+    b(2) := 20;
+    b(3) := 30;
+    b(4) := 40;
+    b(5) := 50;
+    b(6) := 60;   
+    WRITE b(0);     [ b(6) ]
+    WRITE b(1);     [ b(5) ]
+    WRITE b(2);     [ b(4) ]
+    WRITE b(3);     [ b(3) ]
+    WRITE b(4);     [ b(4) ]
+    WRITE b(5);     [ b(5) ]
+    WRITE b(6);     [ b(6) ]
+    WRITE a;
+END
