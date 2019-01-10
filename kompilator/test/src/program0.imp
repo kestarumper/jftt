@@ -1,11 +1,12 @@
-[ sort.imp 
-]
 DECLARE
-	tab(10:20); a;
+a; b(0:10); z;
 IN
-	a := 10;
-	DO
-		WRITE a;
-		a := a + 1;
-	WHILE a <= 20 ENDDO
+a := 0;
+z := 0;
+b(a) := 13;
+b(1) := 2;
+b(a) := b(a) / b(1);
+WRITE b(a);
+b(a) := b(a) - 5;
+WRITE b(a);
 END

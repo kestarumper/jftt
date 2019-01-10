@@ -170,6 +170,8 @@ def TIMES(p, leftValue, rightValue, destReg=REG.B, leftReg=REG.C, rightReg=REG.D
     leftValue.evalToRegInstr(p, leftReg)
     rightValue.evalToRegInstr(p, rightReg)
 
+    #TODO: JUMP IF ZERO LEFT or RIGHT
+
     # SWAP TO LEFT REGISTER BIGGER NUMBER
     COPY(p, destReg, rightReg)
     SUB(p, destReg, leftReg)
