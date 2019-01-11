@@ -1,0 +1,4 @@
+#!/bin/bash
+srcFile="$1"
+outFile="$2"
+python kompilator.py "$srcFile" "$outFile"

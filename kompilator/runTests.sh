@@ -1,6 +1,6 @@
 #!/bin/bash
 for filename in jftt2018-testy/*.imp; do
-    python main.py "$filename" "TESTS_OUT/$(basename $filename).mr"
+    python kompilator.py "$filename" "TESTS_OUT/$(basename $filename).mr"
     rc=$?
     if [[ $rc != 0 ]]
     then

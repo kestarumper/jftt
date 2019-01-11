@@ -1,6 +1,6 @@
 #!/bin/bash
 filename="$1"
-python main.py "$filename" "TESTS_OUT/$(basename $filename).mr"
+python kompilator.py "$filename" "TESTS_OUT/$(basename $filename).mr"
 
 rc=$?
 if [[ $rc != 0 ]]
