@@ -21,6 +21,9 @@ class ValueFromIdentifier(Expression):
 
     def evalToRegInstr(self, p, reg):
         try:
+            isInitialized = self.identifier.declaration.initialized
+            if isInitialized == False:
+                raise Exception("Variable '%s' is not initialized" % self.identifier.pidentifier)
             if isinstance(self.identifier, ArrayAccess):
                 return Instructions.LOAD_ARRAY_VALUE_TO_REGISTER(p, self.identifier, reg)
             return Instructions.LOAD_IDENTIFIER_VALUE_TO_REGISTER(p, self.identifier, reg)

@@ -8,6 +8,7 @@ class Program:
         self.counter = 0
         MemoryManager.runMemCheck(self.declarations)
         MemoryManager.assignMemToDeclarations()
+        # MemoryManager.listDeclarationsMemory()
         self.processCommands()
 
     def getCounter(self):

@@ -20,6 +20,7 @@ class CommandAssign(Command):
         self.expression = expression
 
     def generateCode(self, p):
+        self.identifier.declaration.initialized = True
         try:
             return Instructions.ASSIGN(p, self.identifier, self.expression)
         except Exception as err:
@@ -81,7 +82,6 @@ class CommandForTo(Command):
                 raise Exception("Using iterator '%s' as FROM range in FOR loop at line %i" % (self.pidentifier, self.lineNumber))
 
     def generateCode(self, p):
-
         declaredIterator = DeclarationVariable(self.pidentifier, islocal=True)
         declaredIterator.register()
         iteratorIdentifier = Identifier(self.pidentifier)
@@ -110,6 +110,7 @@ class CommandRead(Command):
         self.identifier = identifier
 
     def generateCode(self, p):
+        self.identifier.declaration.initialized = True
         Instructions.READ(p, self.identifier)
 
 

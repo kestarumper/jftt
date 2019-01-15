@@ -8,18 +8,20 @@ class DeclarationVariable:
         self.isarr = isarr
         self.length = 1
         self.islocal = islocal
+        self.initialized = False
 
     def delete(self):
         MemoryManager.unregister(self)
 
     def register(self):
+        self.initialized = True
         MemoryManager.assignMem(self)
 
     def isArray(self):
         return self.isarr == True
 
     def __repr__(self):
-        return str((self.memoryId, self.length, "Array" if self.isarr else "Var" ))
+        return str((self.pidentifier, self.memoryId, self.length, "Array" if self.isarr else "Var"))
 
 class DeclarationArray(DeclarationVariable):
     def __init__(self, pidentifier, rangeFrom, rangeTo, line):
