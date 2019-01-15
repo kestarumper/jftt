@@ -3,13 +3,11 @@ from Memory import manager as MemoryManager
 class Program:
     def __init__(self, declarations, commands):
         self.declarations = declarations
-        self.declaredPidentifiers = set()
         self.commands = commands
         self.instructions = []
         self.counter = 0
         MemoryManager.runMemCheck(self.declarations)
         MemoryManager.assignMemToDeclarations()
-        # MemoryManager.listDeclarationsMemory()
         self.processCommands()
 
     def getCounter(self):
