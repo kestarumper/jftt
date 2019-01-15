@@ -1,4 +1,4 @@
 all:
 	sudo apt update
 	sudo apt install python3-pip -y
-	pip install ply -y
+	pip install ply
