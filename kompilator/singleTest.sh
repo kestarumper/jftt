@@ -1,6 +1,6 @@
 #!/bin/bash
 filename="$1"
-python kompilator.py "$filename" "TESTS_OUT/$(basename $filename).mr"
+./kompilator "$filename" "TESTS_OUT/$(basename $filename).mr"
 
 rc=$?
 if [[ $rc != 0 ]]
@@ -9,4 +9,4 @@ then
 fi
 
 echo "TEST [$filename]"
-/home/adrian/jftt/kompilator/maszyna_rejestrowa/maszyna-rejestrowa "TESTS_OUT/$(basename $filename).mr"
+./maszyna_rejestrowa/maszyna-rejestrowa "TESTS_OUT/$(basename $filename).mr"
