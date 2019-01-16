@@ -10,6 +10,7 @@ Compiler project written for _Formal Languages and Translation Techniques_ class
 ## By command line
 ```
 sudo apt update
+sudo apt install python3 -y
 sudo apt install python3-pip -y
 pip install ply || pip3 install ply
 ```
